@@ -1,0 +1,9 @@
+.MainToolbar {
+    display: none;
+}
+
+@media (min-width: 500px) {
+    .MainToolbar {
+        display: block;
+    }
+}

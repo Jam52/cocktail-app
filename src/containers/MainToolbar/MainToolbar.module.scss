@@ -1,0 +1,26 @@
+.Display {
+    display: none;
+}
+
+.Header {
+    padding: 1rem;
+}
+
+.Header__container {
+    width: 80vw;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.Icon {
+    width: 20vw;
+}
+
+@media (min-width: 500px) {
+    .Display {
+        display: block;
+        position: fixed;
+        top: 0;
+    }
+}

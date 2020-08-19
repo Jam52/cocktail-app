@@ -1,0 +1,51 @@
+.MobileToolbar {
+    width: 100vw;
+    position: fixed;
+    bottom: 0;
+    transition-property: transform;
+    transition-duration: 0.5s;
+}
+
+.Border {
+    width: 100vw;
+    height: 8px;
+    background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
+}
+
+.BorderBlack {
+    width: 100vw;
+    height: 6px;
+    background-color: #000;
+}
+
+.BorderSmall {
+    width: 100vw;
+    height: 4px;
+    background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
+}
+
+.Icon {
+    position: relative;
+    cursor: pointer;
+    left: 65vw;
+    width: 25vw;
+    padding: 0.5em;
+    border-top: 3px solid #b59952;
+    border-left: 3px solid #b59952;
+    border-right: 3px solid #b59952;
+    border-radius: 15px 15px 0 0;
+
+    img {
+        width: 100%;
+    }
+}
+
+.Popup {
+    padding: 1rem;
+}
+
+@media (min-width: 500px) {
+    .MobileToolbar {
+        display: none;
+    }
+}
