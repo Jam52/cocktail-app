@@ -4,6 +4,7 @@ import NavList from "../../components/navigation/NavList/Navlist";
 import classes from "./MobileToolbar.module.scss";
 import MiniIcon from "../../assets/images/madame-mimi-logo-glass.png";
 import Background from "../../assets/images/background.png";
+import Divider from "../../components/Divider/Divider";
 
 class mobileToolbar extends Component {
     state = {
@@ -30,9 +31,7 @@ class mobileToolbar extends Component {
                     >
                         <img src={MiniIcon} alt="Madam Mimi's" />
                     </div>
-                    <div className={classes.BorderSmall}></div>
-                    <div className={classes.BorderBlack}></div>
-                    <div className={classes.Border}></div>
+                    <Divider />
                     <div
                         onClick={this.popupClickHandler}
                         className={classes.Popup}

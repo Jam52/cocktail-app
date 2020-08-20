@@ -6,6 +6,7 @@ import MimiIcon from "../../assets/images/madame-mimi-logo.png";
 import MimiIconGold from "../../assets/images/madame-mimi-logo-gold.png";
 import Background from "../../assets/images/background.png";
 import baseClasses from "../../App.module.scss";
+import Divider from "../../components/Divider/Divider";
 
 const mainToolbar = () => {
     return (
@@ -32,9 +33,7 @@ const mainToolbar = () => {
                     <NavList />
                 </div>
             </div>
-            <div className={baseClasses.Border}></div>
-            <div className={baseClasses.BorderBlack}></div>
-            <div className={baseClasses.BorderSmall}></div>
+            <Divider />
         </div>
     );
 };

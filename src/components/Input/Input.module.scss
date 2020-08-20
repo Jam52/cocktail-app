@@ -1,0 +1,36 @@
+@import "../../App.module.scss";
+
+.InputElement {
+    display: flex;
+    flex-direction: column;
+
+    label {
+        font-family: $font-title;
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 0.5em;
+    }
+
+    input {
+        background-color: #4d4d4d;
+        border: 2px solid #fff;
+        color: #fff;
+        font-family: $font-para;
+        font-size: 1.2rem;
+        box-sizing: border-box;
+        padding: 0.5rem;
+        width: 80vw;
+        height: 3rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (min-width: 500px) {
+    .InputElement {
+        flex-grow: 2;
+        input {
+            width: 100%;
+            margin-bottom: 0;
+        }
+    }
+}

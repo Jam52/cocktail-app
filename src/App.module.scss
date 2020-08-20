@@ -11,19 +11,19 @@ $font-title: "Limelight", cursive;
 
 //borders
 .Border {
-    width: 100vw;
+    width: 100%;
     height: 8px;
     background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
 }
 
 .BorderBlack {
-    width: 100vw;
+    width: 100%;
     height: 6px;
     background-color: #000;
 }
 
 .BorderSmall {
-    width: 100vw;
+    width: 100%;
     height: 4px;
     background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
 }

@@ -1,22 +1,54 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { Route, NavLink } from "react-router-dom";
 import classes from "./SearchPage.module.scss";
+import Divider from "../../components/Divider/Divider";
+import Button from "../../components/Button/Button";
+import NameSearch from "./NameSearch/NameSearch";
+import IngredientSearch from "./IngredientSearch/IngredientSearch";
 
 class SearchPage extends Component {
+    state = {
+        ingredients: {},
+    };
+
+    click(event) {
+        event.preventDefault();
+        console.log("hello!");
+    }
+
     render() {
         return (
             <div className={classes.Search}>
-                <form className={classes.DrinkSearch}>
-                    <div className={classes.InputElement}>
-                        <label>Name your poison </label>
-                        <input
-                            type="text"
-                            placeholder="enter drink name"
-                            name="drink name"
-                        />
+                <div className={classes.Container}>
+                    <h2 className={classes.Title}>
+                        Let me help you find what your looking for!
+                    </h2>
+                    <div>
+                        <NavLink
+                            className={classes.Link}
+                            activeClassName={classes.active}
+                            to={this.props.match.url + "/drink"}
+                        >
+                            Drink
+                        </NavLink>
+                        <NavLink
+                            className={classes.Link}
+                            activeClassName={classes.active}
+                            to={this.props.match.url + "/ingredient"}
+                        >
+                            ingredients
+                        </NavLink>
                     </div>
-                    <button className={classes.Button}>Suprise me!</button>
-                </form>
+                </div>
+                <Divider />
+                <Route
+                    path={this.props.match.url + "/drink"}
+                    component={NameSearch}
+                />
+                <Route
+                    path={this.props.match.url + "/ingredient"}
+                    component={IngredientSearch}
+                />
             </div>
         );
     }

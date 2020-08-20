@@ -3,83 +3,63 @@
 .Search {
     width: 80vw;
     margin: auto;
-    padding-top: 2rem;
+    padding-top: 1rem;
 }
 
-.DrinkSearch {
+.Container {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-}
+    align-items: center;
+    margin-bottom: 2rem;
 
-.InputElement {
-    display: flex;
-    flex-direction: column;
-
-    label {
-        font-family: $font-title;
-        color: #fff;
-        font-size: 1.5rem;
-        margin-bottom: 0.5em;
-    }
-
-    input {
-        background-color: #4d4d4d;
-        border: 2px solid #fff;
-        color: #fff;
-        font-family: $font-para;
-        font-size: 1.2rem;
-        box-sizing: border-box;
-        padding: 0.5rem;
-        width: 80vw;
-        height: 3rem;
-        margin-bottom: 1rem;
+    div {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
     }
 }
 
-.Button {
+.Title {
+    font-family: $font-title;
+    font-size: 1rem;
+    color: #fff;
+    text-align: center;
+}
+
+.Link {
+    margin: 0.5rem 0;
     padding: 0.6em;
     background-color: #000;
     color: #fff;
     font-family: $font-title;
     font-size: 1rem;
     border: 2px solid #fff;
-    height: 3rem;
-    width: 100%;
+    text-align: center;
+    text-decoration: none;
+
+    &:hover,
+    &.active {
+        background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
+        outline: 1px solid #fff;
+        outline-offset: 3px;
+    }
 }
 
 @media (min-width: 500px) {
     .Search {
         width: 80vw;
-        padding-top: 10rem;
+        padding-top: 8rem;
     }
-
-    .DrinkSearch {
-        flex-direction: row;
-        justify-content: flex-start;
+    .Title {
+        font-size: 2rem;
     }
-
-    .InputElement {
-        flex-grow: 2;
-        input {
-            width: 100%;
-            margin-bottom: 0;
+    .Container {
+        div {
+            flex-direction: row;
         }
     }
-
-    .Button {
+    .Link {
         width: 20vw;
-        margin-left: 2rem;
-
-        &:hover {
-            background-image: linear-gradient(
-                to right,
-                #42210b,
-                #b59952,
-                #42210b
-            );
-            outline: 1px solid #fff;
-            outline-offset: 3px;
-        }
     }
 }

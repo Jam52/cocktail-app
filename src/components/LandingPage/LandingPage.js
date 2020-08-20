@@ -9,8 +9,7 @@ const landingPage = () => {
             style={{ backgroundImage: `url(${BackgroundImg})` }}
         >
             <p className={classes.Title}>
-                “Welcome to the Madam Mimi’s cocktail bar, what can I get for
-                you?”
+                “Welcome to Madame Mimi’s cocktail bar, what can I get for you?”
             </p>
         </div>
     );
