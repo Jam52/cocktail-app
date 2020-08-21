@@ -3,12 +3,14 @@
 .InputElement {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     label {
         font-family: $font-title;
         color: #fff;
         font-size: 1.5rem;
-        margin-bottom: 0.5em;
+        white-space: nowrap;
+        margin-bottom: 0.5rem;
     }
 
     input {
@@ -19,9 +21,8 @@
         font-size: 1.2rem;
         box-sizing: border-box;
         padding: 0.5rem;
-        width: 80vw;
+        width: 100%;
         height: 3rem;
-        margin-bottom: 1rem;
     }
 }
 
@@ -30,7 +31,6 @@
         flex-grow: 2;
         input {
             width: 100%;
-            margin-bottom: 0;
         }
     }
 }

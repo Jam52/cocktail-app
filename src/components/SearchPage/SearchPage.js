@@ -2,20 +2,11 @@ import React, { Component } from "react";
 import { Route, NavLink } from "react-router-dom";
 import classes from "./SearchPage.module.scss";
 import Divider from "../../components/Divider/Divider";
-import Button from "../../components/Button/Button";
 import NameSearch from "./NameSearch/NameSearch";
 import IngredientSearch from "./IngredientSearch/IngredientSearch";
+import DrinkCardList from "../DrinkCardList/DrinkCardList";
 
 class SearchPage extends Component {
-    state = {
-        ingredients: {},
-    };
-
-    click(event) {
-        event.preventDefault();
-        console.log("hello!");
-    }
-
     render() {
         return (
             <div className={classes.Search}>

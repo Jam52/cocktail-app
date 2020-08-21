@@ -5,7 +5,6 @@ import classes from "./MainToolbar.module.scss";
 import MimiIcon from "../../assets/images/madame-mimi-logo.png";
 import MimiIconGold from "../../assets/images/madame-mimi-logo-gold.png";
 import Background from "../../assets/images/background.png";
-import baseClasses from "../../App.module.scss";
 import Divider from "../../components/Divider/Divider";
 
 const mainToolbar = () => {
@@ -15,7 +14,7 @@ const mainToolbar = () => {
                 className={classes.Header}
                 style={{ backgroundImage: `url(${Background})` }}
             >
-                <div class={classes.Header__container}>
+                <div className={classes.Header__container}>
                     <Link to="/">
                         <img
                             src={MimiIcon}

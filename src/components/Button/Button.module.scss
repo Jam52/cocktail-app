@@ -1,7 +1,7 @@
 @import "../../App.module.scss";
 
 .Button {
-    margin: 0.5rem 0;
+    margin: 0;
     padding: 0.6em;
     background-color: #000;
     color: #fff;
@@ -17,22 +17,9 @@
         outline-offset: 3px;
     }
 }
-.ButtonSmall {
-    width: 5rem;
-}
-
-.active {
-    background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
-    outline: 1px solid #fff;
-    outline-offset: 3px;
-}
 
 @media (min-width: 500px) {
     .Button {
         width: 20vw;
-        margin: 0 2rem;
-    }
-    .ButtonSmall {
-        width: 5rem;
     }
 }

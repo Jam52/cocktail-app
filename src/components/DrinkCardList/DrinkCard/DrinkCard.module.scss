@@ -1,0 +1,21 @@
+@import "../../../App.module.scss";
+
+.DrinkCard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+
+    img {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    h2 {
+        font-family: $font-title;
+        color: #fff;
+        font-size: 1rem;
+        text-align: center;
+        margin: 0;
+    }
+}
