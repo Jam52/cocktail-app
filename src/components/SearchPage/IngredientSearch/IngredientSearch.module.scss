@@ -61,9 +61,11 @@
 
 .Dropdowns {
     grid-area: drop;
+    flex-grow: 2;
     div {
         display: flex;
         flex-direction: column;
+        flex-grow: 2;
     }
 
     div + div {
@@ -75,11 +77,16 @@
         color: #fff;
         font-family: $font-para;
         padding: 0.7em;
+        height: 3rem;
     }
 }
 
 .Divider {
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
+}
+
+form + .Divider {
+    padding-bottom: 6rem;
 }
 
 @media (min-width: 500px) {
@@ -94,5 +101,9 @@
             "ing ing ing alco alco drop drop"
             "btn btn - - - - -";
         grid-template-rows: 1fr 3rem;
+    }
+
+    .Button {
+        width: 4rem;
     }
 }

@@ -15,6 +15,7 @@ class ingredientSearch extends Component {
         this.state = {
             glassTypes: null,
             categories: null,
+            ingredientOptions: null,
             ingredients: [],
             alcohol: true,
             chosenGlassType: "Any",
@@ -26,7 +27,12 @@ class ingredientSearch extends Component {
         if (this.state.glassTypes === null) {
             axios.get("/v1/1/list.php?g=list").then((response) => {
                 this.setState({
-                    glassTypes: [{ strGlass: "Any" }, ...response.data.drinks],
+                    glassTypes: [
+                        { strGlass: "Any" },
+                        ...response.data.drinks.sort((a, b) =>
+                            a.strGlass > b.strGlass ? 1 : -1
+                        ),
+                    ],
                 });
             });
         }
@@ -35,7 +41,20 @@ class ingredientSearch extends Component {
                 this.setState({
                     categories: [
                         { strCategory: "Any" },
-                        ...response.data.drinks,
+                        ...response.data.drinks.sort((a, b) =>
+                            a.strCategory > b.strCategory ? 1 : -1
+                        ),
+                    ],
+                });
+            });
+        }
+        if (this.state.ingredientOptions === null) {
+            axios.get("/v1/1/list.php?i=list").then((response) => {
+                this.setState({
+                    ingredientOptions: [
+                        ...response.data.drinks.sort((a, b) =>
+                            a.strIngredient1 > b.strIngredient1 ? 1 : -1
+                        ),
                     ],
                 });
             });
@@ -88,9 +107,12 @@ class ingredientSearch extends Component {
                 ? "?g="
                 : "?g=" + this.state.chosenGlassType.replace(" ", "_");
         this.props.history.push({
-            pathname: this.props.match.url + "/drinkcardlist/" + "filter.php/",
-            search:
-                alcohol + "&" + glassType + "&" + category + "&" + ingredients,
+            pathname:
+                this.props.match.url +
+                "/drinkcardlist/" +
+                "filter.php/" +
+                ingredients,
+            search: "?" + glassType + "&" + category + "&" + alcohol,
         });
     };
 
@@ -109,20 +131,30 @@ class ingredientSearch extends Component {
                 );
             });
         }
+        let ingredientOptions = <option>Unknown</option>;
+        if (this.state.ingredientOptions !== null) {
+            ingredientOptions = this.state.ingredientOptions.map(
+                (ingredient) => {
+                    return (
+                        <option key={ingredient.strIngredient1}>
+                            {ingredient.strIngredient1}
+                        </option>
+                    );
+                }
+            );
+        }
 
         return (
             <Aux>
                 <form className={classes.IngredientSearch}>
                     <div className={classes.AddIngredients}>
-                        <div>
-                            <Input
-                                label="Add Ingredient"
-                                type="text"
-                                placeholder="enter ingredient"
-                                name="ingregient"
-                                id="ingredient"
-                                click={"#"}
-                            />
+                        <div className={classes.Dropdowns}>
+                            <div>
+                                <label className={classes.Title}>
+                                    Ingredients
+                                </label>
+                                <select>{ingredientOptions}</select>
+                            </div>
                             <Button
                                 click={this.addIngredient}
                                 className={classes.Button}
@@ -187,7 +219,9 @@ class ingredientSearch extends Component {
                 </form>
                 <Divider className={classes.Divider} />
                 <Route
-                    path={this.props.match.url + "/drinkcardlist/:param"}
+                    path={
+                        this.props.match.url + "/drinkcardlist/:param/:search"
+                    }
                     component={DrinkCardList}
                 />
             </Aux>

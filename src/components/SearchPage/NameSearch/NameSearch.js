@@ -12,8 +12,12 @@ class nameSearch extends Component {
         event.preventDefault();
         const drinkName = event.target.previousSibling.lastChild.value;
         this.props.history.push({
-            pathname: this.props.match.url + "/drinkcardlist/" + "search.php/",
-            search: "?s=" + drinkName,
+            pathname:
+                this.props.match.url +
+                "/drinkcardlist/" +
+                "search.php/" +
+                "?s=" +
+                drinkName,
         });
     };
 
@@ -35,7 +39,9 @@ class nameSearch extends Component {
                 </form>
                 <Divider />
                 <Route
-                    path={this.props.match.url + "/drinkcardlist/:param"}
+                    path={
+                        this.props.match.url + "/drinkcardlist/:param/:search"
+                    }
                     component={DrinkCardList}
                 />
             </Aux>
