@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, Route } from "react-router-dom";
 import Button from "../../Button/Button";
-import Input from "../../Input/Input";
+
 import classes from "./IngredientSearch.module.scss";
 import axios from "../../../axiosCocktail";
 import Ingredients from "../../../components/Ingredients/Ingredients";
@@ -112,7 +112,7 @@ class ingredientSearch extends Component {
                 "/drinkcardlist/" +
                 "filter.php/" +
                 ingredients,
-            search: "?" + glassType + "&" + category + "&" + alcohol,
+            search: "?" + alcohol + "&" + glassType + "&" + category,
         });
     };
 
@@ -224,6 +224,7 @@ class ingredientSearch extends Component {
                     }
                     component={DrinkCardList}
                 />
+                <div className={classes.Buffer}></div>
             </Aux>
         );
     }

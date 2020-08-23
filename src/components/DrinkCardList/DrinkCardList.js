@@ -13,6 +13,7 @@ class DrinkCardList extends Component {
 
     componentDidMount() {
         console.log("[DrinkCardList]ComponentDidMount");
+        console.log(this.props.match.params.search);
         if (
             this.state.searchItems !==
             this.props.match.params.search + this.loadSearchParams()
@@ -33,12 +34,14 @@ class DrinkCardList extends Component {
 
     fetchData = async () => {
         console.log(this.props.match.params.param + this.loadSearchParams());
-
+        let mainSearchParam = this.props.match.params.search.replace(" ", "_");
+        console.log("{MainSearchParam}", mainSearchParam);
+        if (mainSearchParam === "?i=") {
+            mainSearchParam = "?i=*";
+        }
         let mainData = await axios
             .get(
-                "/v2/9973533/" +
-                    this.props.match.params.param +
-                    this.props.match.params.search.replace(" ", "_")
+                "/v2/9973533/" + this.props.match.params.param + mainSearchParam
             )
             .then((response) => {
                 console.log("[MainData]", response.data.drinks);
@@ -58,12 +61,17 @@ class DrinkCardList extends Component {
                     return [...response.data.drinks];
                 });
             data.push(...fetchParam);
+        }
 
+        if (data.length > 57) {
             data = data
                 .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
                 .filter((drink, index) => {
                     if (data[index + 1] !== undefined) {
-                        return drink.strDrink === data[index + 1].strDrink;
+                        return (
+                            drink.strDrink === data[index + 1].strDrink &&
+                            typeof drink === "object"
+                        );
                     }
                 });
         }

@@ -1,0 +1,21 @@
+@import "../../App.module.scss";
+
+.RandomPage {
+    width: 80vw;
+    margin: auto;
+}
+
+.Title {
+    margin: 0;
+    font-family: $font-title;
+    color: #fff;
+    padding: 1rem 0;
+    font-size: 1rem;
+}
+
+@media (min-width: 500px) {
+    .RandomPage {
+        padding-top: 8rem;
+        width: 80vw;
+    }
+}
