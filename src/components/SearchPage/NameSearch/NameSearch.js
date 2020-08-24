@@ -34,7 +34,7 @@ class nameSearch extends Component {
                     />
 
                     <Button click={this.enterDrinkNameHandler}>
-                        Suprise me!
+                        What ya got?
                     </Button>
                 </form>
                 <Divider />

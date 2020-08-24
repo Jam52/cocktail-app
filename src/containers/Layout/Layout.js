@@ -8,6 +8,7 @@ import LandingPage from "../../components/LandingPage/LandingPage";
 import SearchPage from "../../components/SearchPage/SearchPage.js";
 import RandomPage from "../../components/RandomPage/RandomPage";
 import DrinkDetails from "../../components/DrinkDetails/DrinkDetails";
+import AboutPage from "../../components/AboutPage/AboutPage";
 
 // import classes from "./Layout.Module.scss";
 
@@ -21,6 +22,7 @@ const Layout = (props) => {
                 <Route path="/" exact component={LandingPage} />
                 <Route path="/search" component={SearchPage} />
                 <Route path="/random" component={RandomPage} />
+                <Route path="/about" component={AboutPage} />
                 <Route path="/drinkdetails/:id" component={DrinkDetails} />
             </Switch>
         </Aux>

@@ -1,0 +1,38 @@
+@import "../../App.module.scss";
+
+.AboutPage {
+    width: 80vw;
+    margin: auto;
+    padding-bottom: 6rem;
+}
+
+.Title {
+    font-family: $font-title;
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: left;
+    margin: 0;
+    padding: 2rem 0;
+}
+
+.Paragraph {
+    font-family: $font-para;
+    color: #fff;
+    max-width: 60ch;
+    margin: auto;
+    padding: 0 0 2rem 0;
+}
+
+.Divider {
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 500px) {
+    .AboutPage {
+        padding-top: 9rem;
+    }
+
+    .Title {
+        text-align: center;
+    }
+}

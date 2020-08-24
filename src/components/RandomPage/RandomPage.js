@@ -79,19 +79,14 @@ class RandomPage extends Component {
                         </Button>
                     </div>
                     <Divider />
-                    <Switch>
-                        <Route
-                            path={
-                                this.props.match.url +
-                                "/drinkcardlist/:param/:search"
-                            }
-                            component={DrinkCardList}
-                        />
-                        <Route
-                            path={this.props.match.url + "/drinkdetails/:id"}
-                            component={DrinkCardList}
-                        />
-                    </Switch>
+
+                    <Route
+                        path={
+                            this.props.match.url +
+                            "/drinkcardlist/:param/:search"
+                        }
+                        component={DrinkCardList}
+                    />
                 </div>
             </Aux>
         );

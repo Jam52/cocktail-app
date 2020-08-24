@@ -37,7 +37,7 @@ class DrinkCardList extends Component {
         let mainSearchParam = this.props.match.params.search.replace(" ", "_");
         console.log("{MainSearchParam}", mainSearchParam);
 
-        let mainData = {};
+        let mainData = [];
         let data = ["inital"];
 
         if (mainSearchParam !== "?i=") {
@@ -49,10 +49,16 @@ class DrinkCardList extends Component {
                 )
                 .then((response) => {
                     console.log("[MainData]", response.data.drinks);
-
-                    return [...response.data.drinks];
+                    if (response.data.drinks !== null) {
+                        return [...response.data.drinks];
+                    } else {
+                        return [];
+                    }
                 });
-            data = [...mainData];
+            if (mainData.length > 0) {
+                data = [...mainData];
+            }
+
             if (typeof data[0] !== "object") {
                 this.setState({
                     drinks: [],
@@ -128,7 +134,7 @@ class DrinkCardList extends Component {
 
     render() {
         let drinkCards = (
-            <p className={classes.Error}>Sorry Can't Find Anything!</p>
+            <p className={classes.Error}>Sorry, I Can't Find Anything!</p>
         );
         if (
             this.state.drinks.length > 0 &&

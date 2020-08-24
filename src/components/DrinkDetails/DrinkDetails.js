@@ -31,7 +31,10 @@ class DrinkDetails extends Component {
 
         let ingredients = [];
         for (let i = 1; i <= 15; i++) {
-            if (data[`strIngredient${i}`] !== null) {
+            if (
+                data[`strIngredient${i}`] !== null &&
+                data[`strIngredient${i}`] !== ""
+            ) {
                 ingredients.push({
                     measure: data[`strMeasure${i}`],
                     ingredient: data[`strIngredient${i}`],

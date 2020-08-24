@@ -12,7 +12,7 @@ class SearchPage extends Component {
             <div className={classes.Search}>
                 <div className={classes.Container}>
                     <h2 className={classes.Title}>
-                        Let me help you find what your looking for!
+                        Let me help you narrow it down a bit!
                     </h2>
                     <div>
                         <NavLink
@@ -20,14 +20,14 @@ class SearchPage extends Component {
                             activeClassName={classes.active}
                             to={this.props.match.url + "/drink"}
                         >
-                            Drink
+                            Drink Name
                         </NavLink>
                         <NavLink
                             className={classes.Link}
                             activeClassName={classes.active}
                             to={this.props.match.url + "/ingredient"}
                         >
-                            ingredients
+                            Ingredients
                         </NavLink>
                     </div>
                 </div>

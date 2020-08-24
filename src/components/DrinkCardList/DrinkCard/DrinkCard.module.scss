@@ -6,11 +6,13 @@
     width: 100%;
     max-width: 300px;
     text-decoration: none;
+    // border-bottom: 6px solid #fff;
 
     &:hover {
         h2 {
-            background-color: transparent;
-            color: #fff;
+            // background-color: transparent;
+            color: #b59952;
+            font-size: 1.1rem;
         }
 
         .Overlay {
@@ -20,13 +22,15 @@
 
     img {
         width: 100%;
+
         // margin: 0.5rem 0;
     }
 
     h2 {
         font-family: $font-title;
         color: #000;
-        font-size: 1.3rem;
+        font-size: 1rem;
+        height: 1.5rem;
         text-align: center;
         margin: 0;
         text-decoration: none;
@@ -38,6 +42,7 @@
 
 .Container {
     position: relative;
+    background-color: #b59952;
 }
 
 .Overlay {
@@ -46,6 +51,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    padding: 0;
     height: 100%;
     width: 100%;
     opacity: 1;
