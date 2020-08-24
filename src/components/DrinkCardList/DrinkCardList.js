@@ -4,11 +4,13 @@ import axios from "../../axiosCocktail";
 import DrinkCard from "./DrinkCard/DrinkCard";
 import Divider from "../../components/Divider/Divider";
 import Aux from "../../hoc/Auxillary/Auxillary";
+import Spinner from "../Spinner/Spinner";
 
 class DrinkCardList extends Component {
     state = {
         searchItems: "",
         drinks: [],
+        loading: true,
     };
 
     componentDidMount() {
@@ -65,6 +67,7 @@ class DrinkCardList extends Component {
                     searchItems:
                         this.props.match.params.search +
                         this.loadSearchParams(),
+                    loading: false,
                 });
                 return null;
             }
@@ -99,6 +102,7 @@ class DrinkCardList extends Component {
             drinks: data,
             searchItems:
                 this.props.match.params.search + this.loadSearchParams(),
+            loading: false,
         });
     };
 
@@ -133,24 +137,32 @@ class DrinkCardList extends Component {
     }
 
     render() {
-        let drinkCards = (
-            <p className={classes.Error}>Sorry, I Can't Find Anything!</p>
-        );
-        if (
-            this.state.drinks.length > 0 &&
-            typeof this.state.drinks[0] === "object"
-        ) {
-            drinkCards = this.state.drinks.map((drink) => {
-                return (
-                    <DrinkCard
-                        src={drink.strDrinkThumb}
-                        id={drink.idDrink}
-                        key={drink.idDrink}
-                        title={drink.strDrink}
-                    />
+        let drinkCards = <Spinner />;
+
+        if (this.state.loading === false) {
+            if (
+                this.state.drinks.length > 0 &&
+                typeof this.state.drinks[0] === "object"
+            ) {
+                drinkCards = this.state.drinks.map((drink) => {
+                    return (
+                        <DrinkCard
+                            src={drink.strDrinkThumb}
+                            id={drink.idDrink}
+                            key={drink.idDrink}
+                            title={drink.strDrink}
+                        />
+                    );
+                });
+            } else {
+                drinkCards = (
+                    <p className={classes.Error}>
+                        Sorry, I Can't Find Anything!
+                    </p>
                 );
-            });
+            }
         }
+
         return (
             <Aux>
                 <div className={classes.DrinkCardList}>{drinkCards}</div>

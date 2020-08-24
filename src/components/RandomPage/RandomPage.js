@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Button from "../Button/Button";
-import { Route, Switch } from "react-router-dom";
+import { Route } from "react-router-dom";
 import Aux from "../../hoc/Auxillary/Auxillary";
 import DrinkCardList from "../DrinkCardList/DrinkCardList";
 import classes from "./RandomPage.module.scss";
@@ -14,7 +14,8 @@ class RandomPage extends Component {
 
     randomDrinkSelectionHandler = (event) => {
         event.preventDefault();
-        this.setState({ count: (this.state.count += 1) });
+        let newCount = this.state.count;
+        this.setState({ count: (newCount += 1) });
         this.props.history.push({
             pathname:
                 this.props.match.url +
@@ -27,7 +28,8 @@ class RandomPage extends Component {
 
     popularDrinkSelectionHandler = (event) => {
         event.preventDefault();
-        this.setState({ count: (this.state.count += 1) });
+        let newCount = this.state.count;
+        this.setState({ count: (newCount += 1) });
         this.props.history.push({
             pathname:
                 this.props.match.url +
@@ -40,7 +42,8 @@ class RandomPage extends Component {
 
     latestDrinkSelectionHandler = (event) => {
         event.preventDefault();
-        this.setState({ count: (this.state.count += 1) });
+        let newCount = this.state.count;
+        this.setState({ count: (newCount += 1) });
         this.props.history.push({
             pathname:
                 this.props.match.url +

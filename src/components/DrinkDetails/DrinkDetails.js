@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import axios from "../../axiosCocktail";
 import classes from "./DrinkDetails.module.scss";
 import Aux from "../../hoc/Auxillary/Auxillary";
-import ingredient from "../Ingredients/Ingredient/Ingredient";
 
 class DrinkDetails extends Component {
     state = {
@@ -72,6 +71,7 @@ class DrinkDetails extends Component {
                     <img
                         className={classes.Image}
                         src={this.state.strDrinkThumb}
+                        alt={this.state.strDrink}
                     />
                     <div className={classes.Instructions}>
                         <h3 className={classes.SubTitle}>Instructions</h3>

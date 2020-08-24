@@ -7,11 +7,11 @@ const drinkCard = (props) => {
     console.log("[drinkCard]props:", props);
     return (
         <Link to={"/drinkdetails/" + props.id} className={classes.DrinkCard}>
-            <img src={DrinkCardTopper}></img>
+            <img src={DrinkCardTopper} alt=""></img>
             <h2>{props.title}</h2>
             <div className={classes.Container}>
                 <div className={classes.Overlay}></div>
-                <img src={props.src} />
+                <img src={props.src} alt={props.title} />
             </div>
         </Link>
     );
