@@ -7,6 +7,17 @@
     max-width: 300px;
     text-decoration: none;
 
+    &:hover {
+        h2 {
+            background-color: transparent;
+            color: #fff;
+        }
+
+        .Overlay {
+            opacity: 0;
+        }
+    }
+
     img {
         width: 100%;
         // margin: 0.5rem 0;
@@ -21,5 +32,23 @@
         text-decoration: none;
         padding: 0.6rem 0;
         background-color: #fff;
+        transition-duration: 0.5s;
     }
+}
+
+.Container {
+    position: relative;
+}
+
+.Overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 1;
+    transition: 0.5s ease;
+    background-image: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7));
 }
