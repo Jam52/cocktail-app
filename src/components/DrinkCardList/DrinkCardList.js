@@ -45,6 +45,7 @@ class DrinkCardList extends Component {
             )
             .then((response) => {
                 console.log("[MainData]", response.data.drinks);
+
                 return [...response.data.drinks];
             });
 
@@ -60,20 +61,17 @@ class DrinkCardList extends Component {
                     );
                     return [...response.data.drinks];
                 });
-            data.push(...fetchParam);
-        }
 
-        if (data.length > 57) {
-            data = data
-                .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
-                .filter((drink, index) => {
-                    if (data[index + 1] !== undefined) {
-                        return (
-                            drink.strDrink === data[index + 1].strDrink &&
-                            typeof drink === "object"
-                        );
-                    }
-                });
+            if (data.length === 0) {
+                break;
+            }
+
+            data = data.filter((obj) => typeof obj === "object");
+            data.push(...fetchParam);
+
+            if (data.length > fetchParam.length) {
+                data = this.duplicateEntries(data);
+            }
         }
 
         console.log("{FINAL}", data);
@@ -84,6 +82,16 @@ class DrinkCardList extends Component {
                 this.props.match.params.search + this.loadSearchParams(),
         });
     };
+
+    duplicateEntries(data) {
+        return data
+            .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
+            .filter((drink, index) => {
+                if (data[index + 1] !== undefined) {
+                    return drink.strDrink === data[index + 1].strDrink;
+                }
+            });
+    }
 
     fetchSearchParamsData = async (param) => {
         axios.get("/v2/9973533/filter.php/" + param).then((response) => {

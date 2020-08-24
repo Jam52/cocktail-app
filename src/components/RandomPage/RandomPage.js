@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Button from "../Button/Button";
-import { Route, Link } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Aux from "../../hoc/Auxillary/Auxillary";
 import DrinkCardList from "../DrinkCardList/DrinkCardList";
 import classes from "./RandomPage.module.scss";
@@ -9,9 +9,10 @@ import Divider from "../Divider/Divider";
 class RandomPage extends Component {
     state = {
         count: 1,
+        randomId: "",
     };
 
-    randomDrinkHandler = (event) => {
+    randomDrinkSelectionHandler = (event) => {
         event.preventDefault();
         this.setState({ count: (this.state.count += 1) });
         this.props.history.push({
@@ -32,18 +33,20 @@ class RandomPage extends Component {
                         How about we have some fun?
                     </h2>
                     <div className={classes.ButtonContainer}>
-                        <Button click={this.randomDrinkHandler}>
+                        <Button click={this.randomDrinkSelectionHandler}>
                             Random Selection
                         </Button>
                     </div>
                     <Divider />
-                    <Route
-                        path={
-                            this.props.match.url +
-                            "/drinkcardlist/:param/:search"
-                        }
-                        component={DrinkCardList}
-                    />
+                    <Switch>
+                        <Route
+                            path={
+                                this.props.match.url +
+                                "/drinkcardlist/:param/:search"
+                            }
+                            component={DrinkCardList}
+                        />
+                    </Switch>
                 </div>
             </Aux>
         );
