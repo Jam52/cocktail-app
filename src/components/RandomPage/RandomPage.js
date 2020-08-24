@@ -25,6 +25,32 @@ class RandomPage extends Component {
         });
     };
 
+    popularDrinkSelectionHandler = (event) => {
+        event.preventDefault();
+        this.setState({ count: (this.state.count += 1) });
+        this.props.history.push({
+            pathname:
+                this.props.match.url +
+                "/drinkcardlist/" +
+                "popular.php/" +
+                "?s=" +
+                this.state.count,
+        });
+    };
+
+    latestDrinkSelectionHandler = (event) => {
+        event.preventDefault();
+        this.setState({ count: (this.state.count += 1) });
+        this.props.history.push({
+            pathname:
+                this.props.match.url +
+                "/drinkcardlist/" +
+                "latest.php/" +
+                "?s=" +
+                this.state.count,
+        });
+    };
+
     render() {
         return (
             <Aux>
@@ -33,8 +59,23 @@ class RandomPage extends Component {
                         How about we have some fun?
                     </h2>
                     <div className={classes.ButtonContainer}>
-                        <Button click={this.randomDrinkSelectionHandler}>
+                        <Button
+                            className={classes.Button}
+                            click={this.randomDrinkSelectionHandler}
+                        >
                             Random Selection
+                        </Button>
+                        <Button
+                            className={classes.Button}
+                            click={this.popularDrinkSelectionHandler}
+                        >
+                            Popular Selection
+                        </Button>
+                        <Button
+                            className={classes.Button}
+                            click={this.latestDrinkSelectionHandler}
+                        >
+                            Latest Selection
                         </Button>
                     </div>
                     <Divider />
@@ -44,6 +85,10 @@ class RandomPage extends Component {
                                 this.props.match.url +
                                 "/drinkcardlist/:param/:search"
                             }
+                            component={DrinkCardList}
+                        />
+                        <Route
+                            path={this.props.match.url + "/drinkdetails/:id"}
                             component={DrinkCardList}
                         />
                     </Switch>

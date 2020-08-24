@@ -36,20 +36,33 @@ class DrinkCardList extends Component {
         console.log(this.props.match.params.param + this.loadSearchParams());
         let mainSearchParam = this.props.match.params.search.replace(" ", "_");
         console.log("{MainSearchParam}", mainSearchParam);
-        if (mainSearchParam === "?i=") {
-            mainSearchParam = "?i=*";
+
+        let mainData = {};
+        let data = ["inital"];
+
+        if (mainSearchParam !== "?i=") {
+            mainData = await axios
+                .get(
+                    "/v2/9973533/" +
+                        this.props.match.params.param +
+                        mainSearchParam
+                )
+                .then((response) => {
+                    console.log("[MainData]", response.data.drinks);
+
+                    return [...response.data.drinks];
+                });
+            data = [...mainData];
+            if (typeof data[0] !== "object") {
+                this.setState({
+                    drinks: [],
+                    searchItems:
+                        this.props.match.params.search +
+                        this.loadSearchParams(),
+                });
+                return null;
+            }
         }
-        let mainData = await axios
-            .get(
-                "/v2/9973533/" + this.props.match.params.param + mainSearchParam
-            )
-            .then((response) => {
-                console.log("[MainData]", response.data.drinks);
-
-                return [...response.data.drinks];
-            });
-
-        let data = [...mainData];
 
         for (let param of this.loadSearchParams()) {
             const fetchParam = await axios
@@ -69,7 +82,7 @@ class DrinkCardList extends Component {
             data = data.filter((obj) => typeof obj === "object");
             data.push(...fetchParam);
 
-            if (data.length > fetchParam.length) {
+            if (data.length > fetchParam.length + 1) {
                 data = this.duplicateEntries(data);
             }
         }
