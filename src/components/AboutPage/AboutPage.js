@@ -7,7 +7,7 @@ const aboutPage = (props) => {
         <div className={classes.AboutPage}>
             <h2 className={classes.Title}>Madame Mimi's</h2>
             <p className={classes.Paragraph}>
-                The concept for Madam Mimi's originally started with Mia’s
+                The concept for Madame Mimi's originally started with Mia’s
                 (Mimi’s) dad. For her 8th birthday he put together a cocktail
                 bar (full of soft drinks of course) to refresh all the kids at
                 the birthday party. It was her first taste of making and mixing

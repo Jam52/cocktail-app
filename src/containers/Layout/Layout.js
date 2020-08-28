@@ -19,11 +19,11 @@ const Layout = (props) => {
             <MobileToolbar />
 
             <Switch>
-                <Route path="/" exact component={LandingPage} />
                 <Route path="/search" component={SearchPage} />
                 <Route path="/random" component={RandomPage} />
                 <Route path="/about" component={AboutPage} />
                 <Route path="/drinkdetails/:id" component={DrinkDetails} />
+                <Route path="/" component={LandingPage} />
             </Switch>
         </Aux>
     );
