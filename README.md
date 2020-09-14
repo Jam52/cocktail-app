@@ -1,4 +1,4 @@
-# Madam Mimi's Cocktail App
+# Madame Mimi's Cocktail App
 
 A single page web application to search for and explore cocktails.
 Uses [cocktaildb.com](https://www.thecocktaildb.com/) API database.
@@ -7,7 +7,6 @@ Uses [cocktaildb.com](https://www.thecocktaildb.com/) API database.
 
 - React
 - SCSS
-- JavaScript
 
 ## Installation
 
@@ -21,7 +20,7 @@ npm install npm@latest -g
 
 ### Installation
 
-1. Get api by backing [cocktaildb](https://www.thecocktaildb.com/) on [patreon](https://www.patreon.com/home).
+1. Get api key by backing [cocktaildb](https://www.thecocktaildb.com/) on [patreon](https://www.patreon.com/home).
 2. Clone the repo
 
 ```sh
