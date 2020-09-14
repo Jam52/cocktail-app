@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Button from '../../../components/Button/Button';
-
 import classes from './IngredientSearch.module.scss';
 import axios from '../../../axiosCocktail';
 import Ingredients from '../../../components/Ingredients/Ingredients';
 import Aux from '../../../hoc/Auxillary/Auxillary';
 import Divider from '../../../components/Divider/Divider';
 import DrinkCardList from '../../../components/DrinkCardList/DrinkCardList';
+import Input from '../../../components/Input/Input';
+import { checkEnteredIngredient } from './checkEnteredIngredient';
 
 class ingredientSearch extends Component {
   constructor(props) {
@@ -36,32 +37,32 @@ class ingredientSearch extends Component {
         });
       });
     }
-    if (this.state.categories === null) {
-      axios.get('/v1/1/list.php?c=list').then((response) => {
-        this.setState({
-          categories: [
-            { strCategory: 'Any' },
-            ...response.data.drinks.sort((a, b) =>
-              a.strCategory > b.strCategory ? 1 : -1,
-            ),
-          ],
-        });
-      });
-    }
+
     if (this.state.ingredientOptions === null) {
       axios.get('/v1/1/list.php?i=list').then((response) => {
         this.setState({
           ingredientOptions: [
-            ...response.data.drinks.sort((a, b) =>
-              a.strIngredient1 > b.strIngredient1 ? 1 : -1,
-            ),
+            ...response.data.drinks
+              .sort((a, b) => (a.strIngredient1 > b.strIngredient1 ? 1 : -1))
+              .map((ingredient) => {
+                return ingredient.strIngredient1;
+              }),
           ],
         });
       });
     }
   }
 
-  addIngredient = (event) => {
+  addIngredientOnChange = (event) => {
+    event.preventDefault();
+    console.log('[addIngredient]clicked');
+    const newIngredient = event.target.value;
+    let newIngredients = [newIngredient, ...this.state.ingredients];
+    this.setState({ ingredients: newIngredients });
+    event.target.previousSibling.lastChild.value = '';
+  };
+
+  addIngredientOnClick = (event) => {
     event.preventDefault();
     console.log('[addIngredient]clicked');
     const newIngredient = event.target.previousSibling.lastChild.value;
@@ -82,13 +83,6 @@ class ingredientSearch extends Component {
 
   toggleAlcohol = () => {
     this.setState({ alcohol: !this.state.alcohol });
-  };
-
-  glassSelect = (event) => {
-    this.setState({ chosenGlassType: event.target.value });
-  };
-  categorySelect = (event) => {
-    this.setState({ chosenCategory: event.target.value });
   };
 
   enterIngredientsHandler = (event) => {
@@ -112,26 +106,10 @@ class ingredientSearch extends Component {
   };
 
   render() {
-    let glassOptions = <option>Unknown</option>;
-    if (this.state.glassTypes !== null) {
-      glassOptions = this.state.glassTypes.map((glass) => {
-        return <option key={glass.strGlass}>{glass.strGlass}</option>;
-      });
-    }
-    let categoryOptions = <option>Unknown</option>;
-    if (this.state.categories !== null) {
-      categoryOptions = this.state.categories.map((glass) => {
-        return <option key={glass.strCategory}>{glass.strCategory}</option>;
-      });
-    }
     let ingredientOptions = <option>Unknown</option>;
     if (this.state.ingredientOptions !== null) {
       ingredientOptions = this.state.ingredientOptions.map((ingredient) => {
-        return (
-          <option key={ingredient.strIngredient1}>
-            {ingredient.strIngredient1}
-          </option>
-        );
+        return <option key={ingredient}>{ingredient}</option>;
       });
     }
 
@@ -139,19 +117,25 @@ class ingredientSearch extends Component {
       <Aux>
         <form className={classes.IngredientSearch}>
           <div className={classes.AddIngredients}>
-            <div className={classes.Dropdowns}>
-              <div>
-                <label className={classes.Title}>Ingredients</label>
-                <select>{ingredientOptions}</select>
-              </div>
+            <div>
+              <Input
+                label="Name an ingredient"
+                placeholder="enter an ingredient"
+              ></Input>
               <Button
-                click={this.addIngredient}
-                className={classes.Button}
-                size="small"
+                className={classes.SmallButton}
+                click={this.addIngredientOnClick}
               >
-                Add
+                add
               </Button>
             </div>
+            <div className={classes.Dropdown}>
+              <label className={classes.Title}>Select an ingredient</label>
+              <select onChange={this.addIngredientOnChange}>
+                {ingredientOptions}
+              </select>
+            </div>
+
             <Ingredients
               removeIngredient={this.removeIngredient}
               ingredients={this.state.ingredients}
@@ -183,19 +167,13 @@ class ingredientSearch extends Component {
               </div>
             </div>
           </div>
-          <div className={classes.Dropdowns}>
-            <div>
-              <label className={classes.Title}>Glass</label>
-              <select onChange={this.glassSelect}>{glassOptions}</select>
-            </div>
-            <div>
-              <label className={classes.Title}>Category</label>
-              <select onChange={this.categorySelect}>{categoryOptions}</select>
-            </div>
-          </div>
-          <Link to={this.props.match.url + '/drink'}>
-            <Button click={this.enterIngredientsHandler}>what ya got?</Button>
-          </Link>
+
+          <Button
+            className={classes.Submit}
+            click={this.enterIngredientsHandler}
+          >
+            what ya got?
+          </Button>
         </form>
         <Divider className={classes.Divider} />
         <Route

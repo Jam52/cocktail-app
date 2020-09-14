@@ -19,6 +19,9 @@
     "test": "jest",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "verbose": true
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -35,6 +38,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.10.4"
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "ts-jest": "^26.3.0"
   }
 }

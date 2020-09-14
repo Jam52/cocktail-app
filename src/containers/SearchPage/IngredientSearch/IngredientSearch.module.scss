@@ -1,107 +1,106 @@
-@import "../../../App.module.scss";
+@import '../../../App.module.scss';
 
 .IngredientSearch {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 
-    padding-bottom: 2rem;
-    margin-top: 2rem;
-    align-items: top;
+  padding-bottom: 2rem;
+  margin-top: 2rem;
+  align-items: top;
 
-    & > div {
-        margin-bottom: 1em;
-    }
+  & > div {
+    margin-bottom: 1em;
+  }
 }
 
-.Button {
-    margin-left: 1rem;
+.SmallButton {
+  width: 5rem;
+  margin-left: 1rem;
 }
 
 .AddIngredients {
-    grid-area: ing;
+  grid-area: ing;
+  display: flex;
+  flex-direction: column;
+
+  div {
     display: flex;
-    flex-direction: column;
 
-    div {
-        display: flex;
-
-        Button {
-            align-self: flex-end;
-        }
+    Button {
+      align-self: flex-end;
     }
+  }
 }
 
 .Alcohol {
-    grid-area: alco;
+  grid-area: alco;
+}
+
+.Submit {
+  grid-area: btn;
 }
 
 .Title {
-    font-family: $font-title;
-    color: #fff;
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
+  font-family: $font-title;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
 }
 
 .CheckBox {
+  border: 2px solid #fff;
+  background-color: #4d4d4d;
+  color: #fff;
+  padding: 1em;
+
+  label {
+    font-family: $font-para;
+  }
+  div {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5em 0;
+  }
+}
+
+.Dropdown {
+  grid-area: drop;
+  flex-grow: 2;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+
+  select {
     border: 2px solid #fff;
     background-color: #4d4d4d;
     color: #fff;
-    padding: 1em;
-
-    label {
-        font-family: $font-para;
-    }
-    div {
-        display: flex;
-        justify-content: space-between;
-        margin: 0.5em 0;
-    }
+    font-family: $font-para;
+    padding: 0.7em;
+    height: 3rem;
+  }
 }
 
-.Dropdowns {
-    grid-area: drop;
-    flex-grow: 2;
-    div {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 2;
-    }
-
-    div + div {
-        margin-top: 1rem;
-    }
-    select {
-        border: 2px solid #fff;
-        background-color: #4d4d4d;
-        color: #fff;
-        font-family: $font-para;
-        padding: 0.7em;
-        height: 3rem;
-    }
-}
-
-// .Divider {
-//     padding-bottom: 1rem;
-// }
 .Buffer {
-    height: 7rem;
+  height: 7rem;
 }
-@media (min-width: 500px) {
-    .IngredientSearch {
-        display: grid;
-        align-items: flex-start;
-        grid-template-columns: repeat(7, 1fr);
-        grid-template-rows: repeat(4, 1fr);
-        column-gap: 2em;
-        row-gap: 1em;
-        grid-template-areas:
-            "ing ing ing alco alco drop drop"
-            "btn btn - - - - -";
-        grid-template-rows: 1fr 3rem;
-    }
 
-    .Button {
-        width: 4rem;
-    }
+@media (min-width: 500px) {
+  .IngredientSearch {
+    display: grid;
+    align-items: flex-start;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    column-gap: 2em;
+    row-gap: 1em;
+    grid-template-areas:
+      'ing ing ing alco alco'
+      'btn btn - - - ';
+    grid-template-rows: 1fr 3rem;
+  }
+
+  .Button {
+    width: 4rem;
+  }
 }
