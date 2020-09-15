@@ -1,21 +1,17 @@
-import React, { Component } from "react";
-import NavItem from "./NavItem/NavItem";
-import classes from "./NavList.module.scss";
+import React, { Component } from 'react';
+import NavItem from './NavItem/NavItem';
+import classes from './NavList.module.scss';
 
 class navList extends Component {
-    state = {
-        currentlySelected: "",
-    };
-
-    render() {
-        return (
-            <nav className={classes.NavList}>
-                <NavItem icon="search" />
-                <NavItem icon="random" />
-                <NavItem icon="about" />
-            </nav>
-        );
-    }
+  render() {
+    return (
+      <nav className={classes.NavList}>
+        <NavItem icon="search" />
+        <NavItem icon="random" />
+        <NavItem icon="about" />
+      </nav>
+    );
+  }
 }
 
 export default navList;

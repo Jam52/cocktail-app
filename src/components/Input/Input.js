@@ -1,13 +1,22 @@
-import React from "react";
-import classes from "./Input.module.scss";
+import React from 'react';
+import classes from './Input.module.scss';
 
 const input = (props) => {
-    return (
-        <div className={[classes.InputElement, props.className].join(" ")}>
-            <label>{props.label}</label>
-            <input {...props} />
-        </div>
-    );
+  let classesJoined = [classes.InputElement, props.className].join(' ');
+  if (props.error) {
+    classesJoined = [
+      classes.InputElement,
+      classes.InputError,
+      props.className,
+    ].join(' ');
+  }
+
+  return (
+    <div className={classesJoined}>
+      <label for={props.id}>{props.label}</label>
+      <input {...props} />
+    </div>
+  );
 };
 
 export default input;
