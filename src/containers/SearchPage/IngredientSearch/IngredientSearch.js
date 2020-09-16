@@ -199,6 +199,7 @@ class ingredientSearch extends Component {
           </Button>
         </form>
         <Divider className={classes.Divider} />
+
         <Route
           path={this.props.match.url + '/drinkcardlist/:param/:search'}
           component={DrinkCardList}
