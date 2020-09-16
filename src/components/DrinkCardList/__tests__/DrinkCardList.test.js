@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { duplicateEntriesOnly } from '../duplicateEntriesOnly';
+import { duplicateEntriesOnly } from '../DrinkCardList';
 import data from './__mocks__/mockDrinkData.json';
 import DrinkCardList from '../DrinkCardList';
 
