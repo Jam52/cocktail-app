@@ -21,6 +21,7 @@ class ingredientSearch extends Component {
       alcohol: true,
       chosenGlassType: 'Any',
       chosenCategory: 'Any',
+      newIngredientError: false,
     };
   }
 
@@ -62,13 +63,29 @@ class ingredientSearch extends Component {
     event.target.previousSibling.lastChild.value = '';
   };
 
-  addIngredientOnClick = (event) => {
+  enterNewIngredientHandler = (event) => {
     event.preventDefault();
-    console.log('[addIngredient]clicked');
-    const newIngredient = event.target.previousSibling.lastChild.value;
-    let newIngredients = [newIngredient, ...this.state.ingredients];
-    this.setState({ ingredients: newIngredients });
-    event.target.previousSibling.lastChild.value = '';
+    console.log('[enterNewIngredientHandler]clicked');
+    const newIngredient = checkEnteredIngredient(
+      event.target.previousSibling.lastChild.value,
+      this.state.ingredientOptions,
+    );
+
+    if (newIngredient) {
+      let newIngredients = [newIngredient, ...this.state.ingredients];
+      this.setState({ ingredients: newIngredients });
+      event.target.previousSibling.lastChild.value = '';
+      this.setState({ newIngredientError: false });
+    } else {
+      event.target.previousSibling.lastChild.value = '';
+      this.setState({ newIngredientError: true });
+    }
+  };
+
+  inputChangeHandler = (event) => {
+    if (event.target.value.length > 0) {
+      this.setState({ newIngredientError: false });
+    }
   };
 
   removeIngredient = (event) => {
@@ -85,23 +102,15 @@ class ingredientSearch extends Component {
     this.setState({ alcohol: !this.state.alcohol });
   };
 
-  enterIngredientsHandler = (event) => {
+  submitSearchHandler = (event) => {
     event.preventDefault();
     const ingredients =
       '?i=' + this.state.ingredients.join(',').replace(' ', '_');
     const alcohol = this.state.alcohol ? '?a=Alcoholic' : '?a=Non_Alcoholic';
-    const category =
-      this.state.chosenCategory === 'Any'
-        ? '?c='
-        : '?c=' + this.state.chosenCategory.replace(' ', '_');
-    const glassType =
-      this.state.chosenGlassType === 'Any'
-        ? '?g='
-        : '?g=' + this.state.chosenGlassType.replace(' ', '_');
     this.props.history.push({
       pathname:
         this.props.match.url + '/drinkcardlist/' + 'filter.php/' + ingredients,
-      search: '?' + alcohol + '&' + glassType + '&' + category,
+      search: '?' + alcohol,
     });
   };
 
@@ -113,18 +122,35 @@ class ingredientSearch extends Component {
       });
     }
 
+    let ingredientInput = (
+      <Input
+        id="ingredient input"
+        label="Name an ingredient"
+        placeholder="enter an ingredient"
+      ></Input>
+    );
+
+    if (this.state.newIngredientError === true) {
+      ingredientInput = (
+        <Input
+          id="ingredient input"
+          onChange={this.inputChangeHandler}
+          error
+          label="Name an ingredient"
+          placeholder="we dont have that one!"
+        ></Input>
+      );
+    }
+
     return (
       <Aux>
         <form className={classes.IngredientSearch}>
           <div className={classes.AddIngredients}>
             <div>
-              <Input
-                label="Name an ingredient"
-                placeholder="enter an ingredient"
-              ></Input>
+              {ingredientInput}
               <Button
                 className={classes.SmallButton}
-                click={this.addIngredientOnClick}
+                click={this.enterNewIngredientHandler}
               >
                 add
               </Button>
@@ -160,7 +186,7 @@ class ingredientSearch extends Component {
                 <input
                   type="radio"
                   name="alcohol"
-                  id="ynoes"
+                  id="no"
                   value="no"
                   checked={this.state.alcohol === false}
                 />
@@ -168,16 +194,13 @@ class ingredientSearch extends Component {
             </div>
           </div>
 
-          <Button
-            className={classes.Submit}
-            click={this.enterIngredientsHandler}
-          >
+          <Button className={classes.Submit} click={this.submitSearchHandler}>
             what ya got?
           </Button>
         </form>
         <Divider className={classes.Divider} />
         <Route
-          path={this.props.match.url + '/drinkcardlist/:param/:search'}
+          path={this.props.match.path + '/drinkcardlist/:param/:search'}
           component={DrinkCardList}
         />
         <div className={classes.Buffer}></div>

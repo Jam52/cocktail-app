@@ -1,29 +1,29 @@
 .Display {
-    display: none;
-    width: 100vw;
-    z-index: 10;
+  display: none;
+  width: 100vw;
+  z-index: 10;
 }
 
 .Header {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .Header__container {
-    width: 80vw;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
+  width: 80vw;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
 }
 
 .Icon {
-    height: 5rem;
-    transition-duration: 0.5s;
+  height: 4rem;
+  transition-duration: 0.5s;
 }
 
 @media (min-width: 500px) {
-    .Display {
-        display: block;
-        position: fixed;
-        top: 0;
-    }
+  .Display {
+    display: block;
+    position: fixed;
+    top: 0;
+  }
 }

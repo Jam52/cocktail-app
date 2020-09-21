@@ -1,46 +1,49 @@
-@import "../../../../App.module.scss";
+@import '../../../../App.module.scss';
 
 .NavItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  text-decoration: none;
+
+  p {
+    font-family: $font-para;
+    color: #fff;
+    font-size: 1.2rem;
+    margin: 0.5rem 0 0 0;
     text-decoration: none;
+  }
 
-    p {
-        font-family: $font-para;
-        color: #fff;
-        font-size: 1.2rem;
-        margin: 0.5rem 0 0 0;
-        text-decoration: none;
-    }
-
-    &:hover > p {
-        color: #b59952;
-    }
+  &:hover > p {
+    color: #b59952;
+  }
 }
 
 .NavIcon {
-    height: 3rem;
-    width: 3rem;
+  height: 2rem;
+  width: 2rem;
 }
 
 .NavItem.active > p {
-    color: #b59952;
-    border-bottom: 2px solid #b59952;
+  color: #b59952;
+  border-bottom: 2px solid #b59952;
 }
 
-// .NavItem + .NavItem {
-//     padding-left: 2rem;
-// }
-
 @media (min-width: 500px) {
-    .NavItem {
-        flex-direction: row;
-        align-items: flex-end;
-    }
+  .NavItem {
+    flex-direction: row;
+    align-items: flex-end;
+  }
 
-    .NavItem + .NavItem {
-        margin-left: 1.5em;
-    }
+  .NavItem + .NavItem {
+    margin-left: 1em;
+  }
+}
+
+@media (min-width: 1000px) {
+  .NavIcon {
+    height: 3rem;
+    width: 3rem;
+  }
 }
