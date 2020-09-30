@@ -48,18 +48,17 @@ class DrinkDetails extends Component {
       strGlass: data.strGlass,
       strDrinkThumb: data.strDrinkThumb,
     });
-    console.log(this.state);
   };
 
   render() {
     let drinkDetails = <h2 id="loading">Loading, one sec!</h2>;
     if (this.state.ingredients.length > 0) {
-      let ingredientList = this.state.ingredients.map((ing) => {
+      let ingredientList = this.state.ingredients.map((singleIngrdient) => {
         return (
           <li id="ingredients">
             <p className={classes.ListItem}>
-              <strong>{`${ing.measure}`}</strong>
-              {` - ${ing.ingredient}`}
+              <strong>{`${singleIngrdient.measure}`}</strong>
+              {` - ${singleIngrdient.ingredient}`}
             </p>
           </li>
         );
