@@ -17,13 +17,12 @@ const Layout = (props) => {
     <Aux>
       <MainToolbar />
       <MobileToolbar />
-
+      <Route path="/" exact component={LandingPage} />
       <Switch>
         <Route path="/search" component={SearchPage} />
         <Route path="/random" component={RandomPage} />
         <Route path="/about" component={AboutPage} />
         <Route path="/drinkdetails/:id" component={DrinkDetails} />
-        <Route path="/" component={LandingPage} />
       </Switch>
     </Aux>
   );

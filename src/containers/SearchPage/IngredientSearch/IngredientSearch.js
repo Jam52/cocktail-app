@@ -104,6 +104,7 @@ class ingredientSearch extends Component {
 
   submitSearchHandler = (event) => {
     event.preventDefault();
+    console.log('{submitHandler}fired' + event);
     const ingredients =
       '?i=' + this.state.ingredients.join(',').replace(' ', '_');
     const alcohol = this.state.alcohol ? '?a=Alcoholic' : '?a=Non_Alcoholic';
@@ -199,6 +200,7 @@ class ingredientSearch extends Component {
           </Button>
         </form>
         <Divider className={classes.Divider} />
+
         <Route
           path={this.props.match.path + '/drinkcardlist/:param/:search'}
           component={DrinkCardList}

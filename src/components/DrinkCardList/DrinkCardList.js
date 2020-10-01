@@ -20,7 +20,13 @@ class DrinkCardList extends Component {
       this.state.searchItems !==
       this.props.match.params.search + this.loadSearchParams()
     ) {
-      this.fetchData();
+      this.fetchData().then((data) => {
+        this.setState({
+          drinks: data,
+          searchItems: this.props.match.params.search + this.loadSearchParams(),
+          loading: false,
+        });
+      });
     }
   }
 
@@ -30,94 +36,50 @@ class DrinkCardList extends Component {
       this.state.searchItems !==
       this.props.match.params.search + this.loadSearchParams()
     ) {
-      this.fetchData();
-    }
-  }
-
-  fetchData = async () => {
-    console.log(this.props.match.params.param + this.loadSearchParams());
-    let mainSearchParam = this.props.match.params.search.replace(' ', '_');
-    console.log('{MainSearchParam}', mainSearchParam);
-
-    let mainData = [];
-    let data = ['inital'];
-
-    if (mainSearchParam !== '?i=') {
-      mainData = await axios
-        .get(
-          `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/` +
-            this.props.match.params.param +
-            mainSearchParam,
-        )
-        .then((response) => {
-          console.log('[MainData]', response.data.drinks);
-          if (response.data.drinks !== null) {
-            return [...response.data.drinks];
-          } else {
-            return [];
-          }
-        });
-      if (mainData.length > 0) {
-        data = [...mainData];
-      }
-
-      if (typeof data[0] !== 'object') {
+      this.fetchData().then((data) => {
         this.setState({
-          drinks: [],
+          drinks: data,
           searchItems: this.props.match.params.search + this.loadSearchParams(),
           loading: false,
         });
-        return null;
-      }
-    }
-
-    for (let param of this.loadSearchParams()) {
-      const fetchParam = await axios
-        .get(`/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php/` + param)
-        .then((response) => {
-          console.log(`[ParamFetchData]${param}`, response.data.drinks);
-          return [...response.data.drinks];
-        });
-
-      if (data.length === 0) {
-        break;
-      }
-
-      data = data.filter((obj) => typeof obj === 'object');
-      data.push(...fetchParam);
-
-      if (data.length > fetchParam.length + 1) {
-        data = this.duplicateEntries(data);
-      }
-    }
-
-    console.log('{FINAL}', data);
-
-    this.setState({
-      drinks: data,
-      searchItems: this.props.match.params.search + this.loadSearchParams(),
-      loading: false,
-    });
-  };
-
-  duplicateEntries(data) {
-    return data
-      .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
-      .filter((drink, index) => {
-        if (data[index + 1] !== undefined) {
-          return drink.strDrink === data[index + 1].strDrink;
-        }
       });
+    }
   }
 
-  fetchSearchParamsData = async (param) => {
-    axios
-      .get(`/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php/` + param)
-      .then((response) => {
-        console.log(`[ParamFetchData]${param}`, response.data.drinks);
+  fetchIngredientData = async () => {
+    let mainSearchParam = this.props.match.params.search.replace(' ', '_');
 
-        return response.data.drinks;
-      });
+    const getData = await axios.get(
+      `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/` +
+        this.props.match.params.param +
+        mainSearchParam,
+    );
+
+    return await getData.data.drinks;
+  };
+
+  fetchParamData = async () => {
+    let data = [];
+
+    for (let param of this.loadSearchParams()) {
+      const getParamData = await axios.get(
+        `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php/` + param,
+      );
+
+      const paramResData = await getParamData.data.drinks;
+      data.push(...paramResData);
+      data = data.filter((obj) => typeof obj === 'object');
+    }
+    return data;
+  };
+
+  fetchData = async () => {
+    const ingredientData = await this.fetchIngredientData();
+    const paramData = await this.fetchParamData();
+
+    let combinedData = [...ingredientData, ...paramData];
+
+    return duplicateEntriesOnly(combinedData);
   };
 
   loadSearchParams() {
@@ -126,7 +88,6 @@ class DrinkCardList extends Component {
     for (let param of query.entries()) {
       if (param[1]) {
         newSearchParams.push(param.join('='));
-        console.log(newSearchParams);
       }
     }
     return newSearchParams;
@@ -166,4 +127,15 @@ class DrinkCardList extends Component {
   }
 }
 
+function duplicateEntriesOnly(data) {
+  return data
+    .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
+    .filter((drink, index) => {
+      if (data[index + 1] !== undefined) {
+        return drink.strDrink === data[index + 1].strDrink;
+      }
+    });
+}
+
+export { duplicateEntriesOnly };
 export default DrinkCardList;
