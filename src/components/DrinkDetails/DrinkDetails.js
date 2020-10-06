@@ -53,12 +53,12 @@ class DrinkDetails extends Component {
   render() {
     let drinkDetails = <h2 id="loading">Loading, one sec!</h2>;
     if (this.state.ingredients.length > 0) {
-      let ingredientList = this.state.ingredients.map((singleIngrdient) => {
+      let ingredientList = this.state.ingredients.map((singleIngredient) => {
         return (
           <li id="ingredients">
             <p className={classes.ListItem}>
-              <strong>{`${singleIngrdient.measure}`}</strong>
-              {` - ${singleIngrdient.ingredient}`}
+              <strong>{`${singleIngredient.measure}`}</strong>
+              {` - ${singleIngredient.ingredient}`}
             </p>
           </li>
         );
