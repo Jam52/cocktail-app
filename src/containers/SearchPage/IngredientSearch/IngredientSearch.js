@@ -31,7 +31,6 @@ class ingredientSearch extends Component {
         pathname:
           this.props.history.location.pathname +
           this.props.history.location.search,
-        search: this.props.history.location.search,
       });
     }
 
