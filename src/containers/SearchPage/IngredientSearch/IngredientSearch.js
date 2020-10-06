@@ -26,16 +26,12 @@ class ingredientSearch extends Component {
   }
 
   componentDidMount() {
-    if (this.state.glassTypes === null) {
-      axios.get('/v1/1/list.php?g=list').then((response) => {
-        this.setState({
-          glassTypes: [
-            { strGlass: 'Any' },
-            ...response.data.drinks.sort((a, b) =>
-              a.strGlass > b.strGlass ? 1 : -1,
-            ),
-          ],
-        });
+    if (this.props.history.action === 'POP') {
+      this.props.history.push({
+        pathname:
+          this.props.history.location.pathname +
+          this.props.history.location.search,
+        search: this.props.history.location.search,
       });
     }
 
@@ -110,8 +106,12 @@ class ingredientSearch extends Component {
     const alcohol = this.state.alcohol ? '?a=Alcoholic' : '?a=Non_Alcoholic';
     this.props.history.push({
       pathname:
-        this.props.match.url + '/drinkcardlist/' + 'filter.php/' + ingredients,
-      search: '?' + alcohol,
+        this.props.match.url +
+        '/drinkcardlist/' +
+        'filter.php/' +
+        ingredients +
+        '/' +
+        alcohol,
     });
   };
 

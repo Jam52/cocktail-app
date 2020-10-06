@@ -15,7 +15,7 @@ class DrinkCardList extends Component {
 
   componentDidMount() {
     console.log('[DrinkCardList]ComponentDidMount');
-    console.log(this.props.match.params.search);
+    console.log(this.props);
     if (
       this.state.searchItems !==
       this.props.match.params.search + this.loadSearchParams()
@@ -77,9 +77,7 @@ class DrinkCardList extends Component {
     const ingredientData = await this.fetchIngredientData();
     const paramData = await this.fetchParamData();
 
-    let combinedData = [...ingredientData, ...paramData];
-
-    return duplicateEntriesOnly(combinedData);
+    return duplicateEntriesOnly(ingredientData, paramData);
   };
 
   loadSearchParams() {
@@ -127,7 +125,11 @@ class DrinkCardList extends Component {
   }
 }
 
-function duplicateEntriesOnly(data) {
+function duplicateEntriesOnly(dataArrayOne, dataArrayTwo) {
+  const data = [...dataArrayOne, ...dataArrayTwo];
+  if (dataArrayOne.length < 1 || dataArrayTwo.length < 1) {
+    return data;
+  }
   return data
     .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
     .filter((drink, index) => {

@@ -8,6 +8,17 @@ import DrinkCardList from '../../../components/DrinkCardList/DrinkCardList';
 import { Route } from 'react-router-dom';
 
 class nameSearch extends Component {
+  componentDidMount() {
+    if (this.props.history.action === 'POP') {
+      this.props.history.push({
+        pathname:
+          this.props.history.location.pathname +
+          this.props.history.location.search,
+        search: this.props.history.location.search,
+      });
+    }
+  }
+
   enterDrinkNameHandler = (event) => {
     event.preventDefault();
     const drinkName = event.target.previousSibling.lastChild.value;
