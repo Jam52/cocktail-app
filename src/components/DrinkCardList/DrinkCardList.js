@@ -15,7 +15,7 @@ class DrinkCardList extends Component {
 
   componentDidMount() {
     console.log('[DrinkCardList]ComponentDidMount');
-    console.log(this.props.match.params.search);
+    console.log(this.props);
     if (
       this.state.searchItems !==
       this.props.match.params.search + this.loadSearchParams()

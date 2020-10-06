@@ -12,6 +12,15 @@ class RandomPage extends Component {
     randomId: '',
   };
 
+  componentDidMount() {
+    console.log(this.props);
+    if (this.props.history.action === 'POP') {
+      this.props.history.push({
+        pathname: this.props.history.location.pathname + '?s=' + 0,
+      });
+    }
+  }
+
   randomDrinkSelectionHandler = (event) => {
     event.preventDefault();
     let newCount = this.state.count;
