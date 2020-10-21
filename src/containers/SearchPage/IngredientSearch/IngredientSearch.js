@@ -9,14 +9,16 @@ import Divider from '../../../components/Divider/Divider';
 import DrinkCardList from '../../../components/DrinkCardList/DrinkCardList';
 import Input from '../../../components/Input/Input';
 import { checkEnteredIngredient } from './checkEnteredIngredient';
+import {
+  getIngredientOptions,
+  addSelectedIngrdient,
+} from '../../../store/actions/index';
+import { connect } from 'react-redux';
 
-class ingredientSearch extends Component {
+export class UnconnectedIngredientSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      glassTypes: null,
-      categories: null,
-      ingredientOptions: null,
       ingredients: [],
       alcohol: true,
       chosenGlassType: 'Any',
@@ -26,72 +28,40 @@ class ingredientSearch extends Component {
   }
 
   componentDidMount() {
-    if (this.props.history.action === 'POP') {
-      this.props.history.push({
-        pathname:
-          this.props.history.location.pathname +
-          this.props.history.location.search,
-        search: this.props.history.location.search,
-      });
-    }
-
-    if (this.state.ingredientOptions === null) {
-      axios.get('/v1/1/list.php?i=list').then((response) => {
-        this.setState({
-          ingredientOptions: [
-            ...response.data.drinks
-              .sort((a, b) => (a.strIngredient1 > b.strIngredient1 ? 1 : -1))
-              .map((ingredient) => {
-                return ingredient.strIngredient1;
-              }),
-          ],
-        });
-      });
+    if (this.props.ingredients.ingredientOptions.length === 0) {
+      this.props.getIngredientOptions();
     }
   }
 
   addIngredientOnChange = (event) => {
     event.preventDefault();
-    console.log('[addIngredient]clicked');
     const newIngredient = event.target.value;
-    let newIngredients = [newIngredient, ...this.state.ingredients];
-    this.setState({ ingredients: newIngredients });
-    event.target.previousSibling.lastChild.value = '';
+    this.props.addSelectedIngrdient(newIngredient);
   };
 
   enterNewIngredientHandler = (event) => {
     event.preventDefault();
-    console.log('[enterNewIngredientHandler]clicked');
-    const newIngredient = checkEnteredIngredient(
-      event.target.previousSibling.lastChild.value,
-      this.state.ingredientOptions,
-    );
 
-    if (newIngredient) {
-      let newIngredients = [newIngredient, ...this.state.ingredients];
-      this.setState({ ingredients: newIngredients });
-      event.target.previousSibling.lastChild.value = '';
-      this.setState({ newIngredientError: false });
-    } else {
-      event.target.previousSibling.lastChild.value = '';
-      this.setState({ newIngredientError: true });
-    }
+    // const newIngredient = checkEnteredIngredient(
+    //   event.target.previousSibling.lastChild.value,
+    //   this.state.ingredientOptions,
+    // );
+
+    //   if (newIngredient) {
+    //     let newIngredients = [newIngredient, ...this.state.ingredients];
+    //     this.setState({ ingredients: newIngredients });
+    //     event.target.previousSibling.lastChild.value = '';
+    //     this.setState({ newIngredientError: false });
+    //   } else {
+    //     event.target.previousSibling.lastChild.value = '';
+    //     this.setState({ newIngredientError: true });
+    //   }
   };
 
   inputChangeHandler = (event) => {
     if (event.target.value.length > 0) {
       this.setState({ newIngredientError: false });
     }
-  };
-
-  removeIngredient = (event) => {
-    event.preventDefault();
-    console.log('[removeIngredient]clicked');
-    console.log(event.target);
-    let ingredientRemoved = this.state.ingredients.filter((ing) => {
-      return ing !== event.target.value;
-    });
-    this.setState({ ingredients: ingredientRemoved });
   };
 
   toggleAlcohol = () => {
@@ -117,10 +87,17 @@ class ingredientSearch extends Component {
 
   render() {
     let ingredientOptions = <option>Unknown</option>;
-    if (this.state.ingredientOptions !== null) {
-      ingredientOptions = this.state.ingredientOptions.map((ingredient) => {
-        return <option key={ingredient}>{ingredient}</option>;
-      });
+
+    if (this.props.ingredients.ingredientOptions.length > 0) {
+      ingredientOptions = this.props.ingredients.ingredientOptions
+        .sort()
+        .map((ingredient) => {
+          return (
+            <option value={ingredient} key={ingredient}>
+              {ingredient}
+            </option>
+          );
+        });
     }
 
     let ingredientInput = (
@@ -158,15 +135,15 @@ class ingredientSearch extends Component {
             </div>
             <div className={classes.Dropdown}>
               <label className={classes.Title}>Select an ingredient</label>
-              <select onChange={this.addIngredientOnChange}>
+              <select
+                data-test="dropdown-ingredients"
+                onChange={this.addIngredientOnChange}
+              >
                 {ingredientOptions}
               </select>
             </div>
 
-            <Ingredients
-              removeIngredient={this.removeIngredient}
-              ingredients={this.state.ingredients}
-            />
+            <Ingredients />
           </div>
 
           <div className={classes.Alcohol}>
@@ -211,4 +188,14 @@ class ingredientSearch extends Component {
   }
 }
 
-export default ingredientSearch;
+const mapStateToProps = (state) => {
+  const { ingredients } = state;
+  return {
+    ingredients,
+  };
+};
+
+export default connect(mapStateToProps, {
+  getIngredientOptions,
+  addSelectedIngrdient,
+})(UnconnectedIngredientSearch);
