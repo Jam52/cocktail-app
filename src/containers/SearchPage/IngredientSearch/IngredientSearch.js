@@ -11,6 +11,7 @@ import { checkEnteredIngredient } from './checkEnteredIngredient';
 import {
   getIngredientOptions,
   addSelectedIngredient,
+  setAlcoholicDrinksOnlyFilter,
 } from '../../../store/actions/index';
 import { connect } from 'react-redux';
 
@@ -59,24 +60,15 @@ export class UnconnectedIngredientSearch extends Component {
   };
 
   toggleAlcohol = () => {
-    this.setState({ alcohol: !this.state.alcohol });
+    this.props.setAlcoholicDrinksOnlyFilter(
+      !this.props.ingredients.alcoholicDrinksOnly,
+    );
   };
 
   submitSearchHandler = (event) => {
     event.preventDefault();
-    console.log('{submitHandler}fired' + event);
-    const ingredients =
-      '?i=' +
-      this.props.ingredients.selectedIngredients.join(',').replace(' ', '_');
-    const alcohol = this.state.alcohol ? '?a=Alcoholic' : '?a=Non_Alcoholic';
     this.props.history.push({
-      pathname:
-        this.props.match.url +
-        '/drinkcardlist/' +
-        'filter.php/' +
-        ingredients +
-        '/' +
-        alcohol,
+      pathname: this.props.match.url + '/drinkcardlist/drinkSearch',
     });
   };
 
@@ -138,7 +130,11 @@ export class UnconnectedIngredientSearch extends Component {
 
           <div className={classes.Alcohol}>
             <h2 className={classes.Title}>Alcohol?</h2>
-            <div className={classes.CheckBox} onClick={this.toggleAlcohol}>
+            <div
+              className={classes.CheckBox}
+              onClick={this.toggleAlcohol}
+              data-test="toggle-alcohol"
+            >
               <div>
                 <label for="yes">Yes Please!</label>
                 <input
@@ -146,7 +142,7 @@ export class UnconnectedIngredientSearch extends Component {
                   name="alcohol"
                   id="yes"
                   value="yes"
-                  checked={this.state.alcohol === true}
+                  checked={this.props.ingredients.alcoholicDrinksOnly === true}
                 />
               </div>
               <div>
@@ -156,7 +152,7 @@ export class UnconnectedIngredientSearch extends Component {
                   name="alcohol"
                   id="no"
                   value="no"
-                  checked={this.state.alcohol === false}
+                  checked={this.props.ingredients.alcoholicDrinksOnly === false}
                 />
               </div>
             </div>
@@ -169,7 +165,7 @@ export class UnconnectedIngredientSearch extends Component {
         <Divider className={classes.Divider} />
 
         <Route
-          path={this.props.match.path + '/drinkcardlist/:param/:search'}
+          path={this.props.match.path + '/drinkcardlist/:search'}
           component={DrinkCardList}
         />
         <div className={classes.Buffer}></div>
@@ -188,4 +184,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   getIngredientOptions,
   addSelectedIngredient,
+  setAlcoholicDrinksOnlyFilter,
 })(UnconnectedIngredientSearch);

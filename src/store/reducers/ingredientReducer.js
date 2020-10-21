@@ -4,6 +4,7 @@ import { actionTypes } from '../actions/index';
 const initialState = {
   ingredientOptions: [],
   selectedIngredients: [],
+  alcoholicDrinksOnly: true,
 };
 
 export default (state = initialState, action) => {
@@ -23,6 +24,12 @@ export default (state = initialState, action) => {
         ...state,
         selectedIngredients: newSelectedIngredients,
       };
+    case actionTypes.SET_ALCOHOL_FILTER:
+      return {
+        ...state,
+        alcoholicDrinksOnly: action.payload,
+      };
+
     default:
       return state;
   }

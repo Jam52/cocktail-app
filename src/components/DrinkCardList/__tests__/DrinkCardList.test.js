@@ -9,7 +9,7 @@ it('should return 3 drinks', () => {
   expect(duplicateEntriesOnly(data.drinks, dataTwo.drinks).length).toEqual(3);
 });
 
-describe('<DrinkCardList/>', () => {
+describe('DrinkCardList', () => {
   const match = {
     params: {
       param: 'filter.php',

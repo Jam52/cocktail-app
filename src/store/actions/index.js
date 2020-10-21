@@ -5,6 +5,7 @@ export const actionTypes = {
   SET_INGREDIENT_OPTIONS: 'SET_INGREDIENT_OPTIONS',
   SET_SELECTED_INGREDIENTS: 'SET_SELECTED_INGREDIENTS',
   REMOVE_SELECTED_INGREDIENTS: 'REMOVE_SELECTED_INGREDIENTS',
+  SET_ALCOHOL_FILTER: 'SET_ALCOHOL_FILTER',
 };
 
 export const getIngredientOptions = () => {
@@ -34,6 +35,15 @@ export const removeSelectedIngredient = (ingredient) => {
     dispatch({
       type: actionTypes.REMOVE_SELECTED_INGREDIENTS,
       payload: ingredient,
+    });
+  };
+};
+
+export const setAlcoholicDrinksOnlyFilter = (alcoholicDrinksOnly) => {
+  return function (dispatch) {
+    dispatch({
+      type: actionTypes.SET_ALCOHOL_FILTER,
+      payload: alcoholicDrinksOnly,
     });
   };
 };

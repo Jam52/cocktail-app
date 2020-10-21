@@ -98,4 +98,18 @@ describe('Ingredient Search', () => {
       });
     });
   });
+
+  describe('alcohol state', () => {
+    test('selecting alcohol check changes state', () => {
+      const state = {
+        ingredients: {
+          ingredientOptions: [],
+          alcoholicDrinksOnly: true,
+        },
+      };
+      const wrapper = setup(state);
+      findByAttr(wrapper, 'toggle-alcohol').simulate('click');
+      expect(store.getState().ingredients.alcoholicDrinksOnly).toBeFalsy();
+    });
+  });
 });
