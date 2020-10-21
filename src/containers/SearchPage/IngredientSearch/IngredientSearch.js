@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import Button from '../../../components/Button/Button';
 import classes from './IngredientSearch.module.scss';
 import Ingredients from '../../../components/Ingredients/Ingredients';
 import Aux from '../../../hoc/Auxillary/Auxillary';
@@ -63,13 +62,6 @@ export class UnconnectedIngredientSearch extends Component {
     this.props.setAlcoholicDrinksOnlyFilter(
       !this.props.ingredients.alcoholicDrinksOnly,
     );
-  };
-
-  submitSearchHandler = (event) => {
-    event.preventDefault();
-    this.props.history.push({
-      pathname: this.props.match.url + '/drinkcardlist/drinkSearch',
-    });
   };
 
   render() {
@@ -157,10 +149,6 @@ export class UnconnectedIngredientSearch extends Component {
               </div>
             </div>
           </div>
-
-          <Button className={classes.Submit} click={this.submitSearchHandler}>
-            what ya got?
-          </Button>
         </form>
         <Divider className={classes.Divider} />
 

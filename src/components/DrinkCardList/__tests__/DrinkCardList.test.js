@@ -4,26 +4,50 @@ import { duplicateEntriesOnly } from '../DrinkCardList';
 import data from './__mocks__/mockDrinkData.json';
 import dataTwo from './__mocks__/mockDrinkDataTwo.json';
 import DrinkCardList from '../DrinkCardList';
+import { storeFactory, findByAttr } from '../../../testUtils/testUtils';
+import axios from 'axios';
+import moxios from 'moxios';
 
-it('should return 3 drinks', () => {
-  expect(duplicateEntriesOnly(data.drinks, dataTwo.drinks).length).toEqual(3);
-});
+let store;
+
+const setup = (initialState = {}, search = 'ingredientSearch') => {
+  store = storeFactory(initialState);
+  const wrapper = shallow(
+    <DrinkCardList
+      store={store}
+      match={{ params: { search: 'ingredientSearch' } }}
+    />,
+  )
+    .dive()
+    .dive();
+
+  return wrapper;
+};
 
 describe('DrinkCardList', () => {
-  const match = {
-    params: {
-      param: 'filter.php',
-      search: '?i=vodka',
-    },
-  };
+  describe('for ingedientSearch route', () => {
+    let wrapper;
+    let state;
+    beforeEach(() => {
+      state = {
+        ingredients: {
+          selectedIngredients: ['Whiskey', 'Lime juice'],
+        },
+      };
+      wrapper = setup(state);
+    });
+    test('should render w/ error', () => {
+      expect(findByAttr(wrapper, 'component-drink-card-list').length).toBe(1);
+    });
 
-  const location = {
-    search: '?a=alcoholic',
-  };
+    test('should have access to selectedIngredients state', () => {
+      expect(wrapper.instance().props.ingredients.selectedIngredients).toEqual(
+        state.ingredients.selectedIngredients,
+      );
+    });
 
-  const wrapper = shallow(<DrinkCardList match={match} location={location} />);
-
-  it('should mount', () => {
-    expect(wrapper).toBeDefined();
+    test('sets searchParams in stateh', () => {
+      expect(wrapper.state().searchParams).toBe('WhiskeyLime juice');
+    });
   });
 });

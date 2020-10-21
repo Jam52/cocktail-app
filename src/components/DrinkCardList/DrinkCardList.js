@@ -5,120 +5,137 @@ import DrinkCard from './DrinkCard/DrinkCard';
 import Divider from '../../components/Divider/Divider';
 import Aux from '../../hoc/Auxillary/Auxillary';
 import Spinner from '../Spinner/Spinner';
+import { connect } from 'react-redux';
+import ingredient from '../Ingredients/Ingredient/Ingredient';
 
 class DrinkCardList extends Component {
   state = {
-    searchItems: '',
+    componentParams: '',
+    searchParams: this.searchParams(this.props.match.params.search),
     drinks: [],
     loading: true,
   };
 
   componentDidMount() {
-    console.log('[DrinkCardList]ComponentDidMount');
-    console.log(this.props);
-    if (
-      this.state.searchItems !==
-      this.props.match.params.search + this.loadSearchParams()
-    ) {
-      this.fetchData().then((data) => {
-        this.setState({
-          drinks: data,
-          searchItems: this.props.match.params.search + this.loadSearchParams(),
-          loading: false,
+    const componentParams =
+      this.props.search + this.props.ingredients.selectedIngredients.join('');
+
+    if (this.state.componentParams !== componentParams) {
+      if (this.props.ingredients.selectedIngredients.length > 0) {
+        this.fetchData(this.props.search).then((data) => {
+          this.setState({
+            drinks: data,
+            loading: false,
+            componentParams: componentParams,
+          });
         });
-      });
+      }
     }
   }
 
   componentDidUpdate() {
-    console.log('[DrinkCardList]ComponentDidUpdate');
-    if (
-      this.state.searchItems !==
-      this.props.match.params.search + this.loadSearchParams()
-    ) {
-      this.fetchData().then((data) => {
-        this.setState({
-          drinks: data,
-          searchItems: this.props.match.params.search + this.loadSearchParams(),
-          loading: false,
+    const componentParams =
+      this.props.search + this.props.ingredients.selectedIngredients.join('');
+    if (this.state.componentParams !== componentParams) {
+      if (this.props.ingredients.selectedIngredients.length > 0) {
+        this.fetchData(this.props.match.params.search).then((data) => {
+          this.setState({
+            drinks: data,
+            loading: false,
+            componentParams: componentParams,
+          });
         });
-      });
+      }
     }
   }
 
   fetchIngredientData = async () => {
-    let mainSearchParam = this.props.match.params.search.replace(' ', '_');
-
+    const ingredientParams = `filter.php?i=${this.props.ingredients.selectedIngredients
+      .join(',')
+      .replace(' ', '_')}`;
     const getData = await axios.get(
-      `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/` +
-        this.props.match.params.param +
-        mainSearchParam,
+      `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/${ingredientParams}`,
     );
-
     return await getData.data.drinks;
   };
 
-  fetchParamData = async () => {
-    let data = [];
+  // fetchParamData = async () => {
+  //   let data = [];
 
-    for (let param of this.loadSearchParams()) {
-      const getParamData = await axios.get(
-        `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php/` + param,
-      );
+  //   for (let param of this.loadSearchParams()) {
+  //     const getParamData = await axios.get(
+  //       `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/${this.state.searchParams}`,
+  //     );
 
-      const paramResData = await getParamData.data.drinks;
-      data.push(...paramResData);
-      data = data.filter((obj) => typeof obj === 'object');
+  //     const paramResData = await getParamData.data.drinks;
+  //     data.push(...paramResData);
+  //     data = data.filter((obj) => typeof obj === 'object');
+  //   }
+  //   return data;
+  // };
+
+  fetchData = async (searchParam) => {
+    let data;
+    switch (searchParam) {
+      case 'ingredientSearch':
+        const ingredientData = await this.fetchIngredientData();
+        data = await ingredientData;
+        break;
+      default:
+        data = null;
     }
+
+    // const paramData = await this.fetchParamData();
+
     return data;
   };
 
-  fetchData = async () => {
-    const ingredientData = await this.fetchIngredientData();
-    const paramData = await this.fetchParamData();
-
-    return duplicateEntriesOnly(ingredientData, paramData);
-  };
-
-  loadSearchParams() {
-    const query = new URLSearchParams(this.props.location.search);
-    let newSearchParams = [];
-    for (let param of query.entries()) {
-      if (param[1]) {
-        newSearchParams.push(param.join('='));
-      }
+  searchParams(search) {
+    switch (search) {
+      case 'ingredientSearch':
+        return `${this.props.ingredients.selectedIngredients.join('')}`;
+      default:
+        return `search.php?s=`;
     }
-    return newSearchParams;
   }
 
   render() {
-    let drinkCards = <Spinner />;
-
-    if (this.state.loading === false) {
-      if (
-        this.state.drinks.length > 0 &&
-        typeof this.state.drinks[0] === 'object'
-      ) {
-        drinkCards = this.state.drinks.map((drink) => {
-          return (
-            <DrinkCard
-              src={drink.strDrinkThumb}
-              id={drink.idDrink}
-              key={drink.idDrink}
-              title={drink.strDrink}
-            />
+    let drinkCards = (
+      <p className={classes.Error}>Please enter some ingredients</p>
+    );
+    if (this.props.ingredients.selectedIngredients.length > 0) {
+      drinkCards = <Spinner />;
+      if (this.state.loading === false) {
+        if (
+          this.state.drinks.length > 0 &&
+          typeof this.state.drinks[0] === 'object'
+        ) {
+          drinkCards = this.state.drinks.map((drink) => {
+            return (
+              <DrinkCard
+                src={drink.strDrinkThumb}
+                id={drink.idDrink}
+                key={drink.idDrink}
+                title={drink.strDrink}
+              />
+            );
+          });
+        } else {
+          drinkCards = (
+            <p className={classes.Error}>Sorry, I Can't Find Anything!</p>
           );
-        });
-      } else {
-        drinkCards = (
-          <p className={classes.Error}>Sorry, I Can't Find Anything!</p>
-        );
+        }
       }
     }
 
     return (
       <Aux>
-        <div className={classes.DrinkCardList}>{drinkCards}</div>
+        <div
+          className={classes.DrinkCardList}
+          data-test="component-drink-card-list"
+        >
+          {drinkCards}
+        </div>
         <Divider className={classes.Divider} />
       </Aux>
     );
@@ -139,5 +156,12 @@ function duplicateEntriesOnly(dataArrayOne, dataArrayTwo) {
     });
 }
 
+const mapStateToProps = (state) => {
+  const { ingredients } = state;
+  return {
+    ingredients,
+  };
+};
+
 export { duplicateEntriesOnly };
-export default DrinkCardList;
+export default connect(mapStateToProps)(DrinkCardList);
