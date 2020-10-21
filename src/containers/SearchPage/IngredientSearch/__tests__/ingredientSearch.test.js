@@ -1,5 +1,3 @@
-const { checkEnteredIngredient } = require('../checkEnteredIngredient');
-import list from './list.json';
 import IngredientSearch, {
   UnconnectedIngredientSearch,
 } from '../IngredientSearch';
@@ -7,7 +5,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import { storeFactory } from '../../../../testUtils/testUtils';
 import { findByAttr } from '../../../../testUtils/testUtils';
-import Ingredients from '../../../../components/Ingredients/Ingredients';
+import { actionTypes } from '../../../../store/actions/index';
 
 let store;
 
@@ -29,11 +27,6 @@ describe('Ingredient Search', () => {
         selectedIngredients: [],
       },
     };
-    test('check if ingredient is in list', () => {
-      expect(checkEnteredIngredient('vodka', list.drinks)).toBe('Vodka');
-      expect(checkEnteredIngredient(' vodka', list.drinks)).toBe('Vodka');
-      expect(checkEnteredIngredient('william', list.drinks)).toBeFalsy();
-    });
 
     test('has access to ingredientOptions', () => {
       const wrapper = setup(state);
@@ -61,17 +54,48 @@ describe('Ingredient Search', () => {
       const mockCalls = getIngredientOptionsMock.mock.calls.length;
       expect(mockCalls).toBe(1);
     });
-    test('adds new selected ingredient to state', () => {
+    test('adds new selected ingredient to state when dropdown option is selected', () => {
       const wrapper = setup(state);
-      const mockPreventDefault = jest.fn();
       const dropdown = findByAttr(wrapper, 'dropdown-ingredients');
-      const value = 'vodka';
+      const expectedResults = ['Vodka'];
       dropdown.simulate('change', {
-        preventDefault: mockPreventDefault,
-        target: { value: value },
+        preventDefault: () => {},
+        target: { value: 'Vodka' },
       });
 
-      expect(store.getState().ingredients.selectedIngredients).toEqual([value]);
+      expect(store.getState().ingredients.selectedIngredients).toEqual(
+        expectedResults,
+      );
+    });
+    describe('entering new ingredient into input', () => {
+      let wrapper;
+      beforeEach(() => {
+        wrapper = setup(state);
+        store.dispatch({
+          type: actionTypes.SET_INGREDIENT_OPTIONS,
+          payload: ['Vodka'],
+        });
+      });
+
+      test('shows error if ingredient not in available ingredientOptions', () => {
+        const button = findByAttr(wrapper, 'ingredients-submit');
+        const input = findByAttr(wrapper, 'ingredients-input').at(0);
+        input.simulate('change', { target: { value: 'Vodky' } });
+        button.simulate('click', { preventDefault: () => {} });
+        expect(
+          findByAttr(wrapper, 'ingredients-input').at(0).props().placeholder,
+        ).toEqual('we dont have that one!');
+      });
+
+      test('adds ingredient to state if correct', () => {
+        const button = findByAttr(wrapper, 'ingredients-submit');
+        const input = findByAttr(wrapper, 'ingredients-input').at(0);
+        input.simulate('change', { target: { value: 'Vodka' } });
+        button.simulate('click', { preventDefault: () => {} });
+        expect(store.getState().ingredients.selectedIngredients).toEqual([
+          'Vodka',
+        ]);
+      });
     });
   });
 });

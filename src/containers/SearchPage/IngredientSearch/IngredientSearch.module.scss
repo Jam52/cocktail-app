@@ -86,6 +86,25 @@
   height: 7rem;
 }
 
+.Button {
+  margin: 0;
+  margin-left: 1rem;
+  padding: 0.6em;
+  background-color: #000;
+  color: #fff;
+  font-family: $font-title;
+  font-size: 1rem;
+  border: 2px solid #fff;
+  height: 3rem;
+  width: 100%;
+
+  &:hover {
+    background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
+    outline: 1px solid #fff;
+    outline-offset: 3px;
+  }
+}
+
 @media (min-width: 500px) {
   .IngredientSearch {
     display: grid;

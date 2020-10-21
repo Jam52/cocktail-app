@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Button from '../../../components/Button/Button';
 import classes from './IngredientSearch.module.scss';
-import axios from '../../../axiosCocktail';
 import Ingredients from '../../../components/Ingredients/Ingredients';
 import Aux from '../../../hoc/Auxillary/Auxillary';
 import Divider from '../../../components/Divider/Divider';
@@ -11,7 +10,7 @@ import Input from '../../../components/Input/Input';
 import { checkEnteredIngredient } from './checkEnteredIngredient';
 import {
   getIngredientOptions,
-  addSelectedIngrdient,
+  addSelectedIngredient,
 } from '../../../store/actions/index';
 import { connect } from 'react-redux';
 
@@ -19,11 +18,9 @@ export class UnconnectedIngredientSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ingredients: [],
       alcohol: true,
-      chosenGlassType: 'Any',
-      chosenCategory: 'Any',
       newIngredientError: false,
+      ingredientInput: '',
     };
   }
 
@@ -36,29 +33,26 @@ export class UnconnectedIngredientSearch extends Component {
   addIngredientOnChange = (event) => {
     event.preventDefault();
     const newIngredient = event.target.value;
-    this.props.addSelectedIngrdient(newIngredient);
+    this.props.addSelectedIngredient(newIngredient);
   };
 
   enterNewIngredientHandler = (event) => {
     event.preventDefault();
-
-    // const newIngredient = checkEnteredIngredient(
-    //   event.target.previousSibling.lastChild.value,
-    //   this.state.ingredientOptions,
-    // );
-
-    //   if (newIngredient) {
-    //     let newIngredients = [newIngredient, ...this.state.ingredients];
-    //     this.setState({ ingredients: newIngredients });
-    //     event.target.previousSibling.lastChild.value = '';
-    //     this.setState({ newIngredientError: false });
-    //   } else {
-    //     event.target.previousSibling.lastChild.value = '';
-    //     this.setState({ newIngredientError: true });
-    //   }
+    const checkedIngredient = checkEnteredIngredient(
+      this.state.ingredientInput,
+      this.props.ingredients.ingredientOptions,
+    );
+    if (checkedIngredient) {
+      this.props.addSelectedIngredient(checkedIngredient);
+      this.setState({ ingredientInput: '' });
+    } else {
+      this.setState({ newIngredientError: true });
+      this.setState({ ingredientInput: '' });
+    }
   };
 
   inputChangeHandler = (event) => {
+    this.setState({ ingredientInput: event.target.value });
     if (event.target.value.length > 0) {
       this.setState({ newIngredientError: false });
     }
@@ -72,7 +66,8 @@ export class UnconnectedIngredientSearch extends Component {
     event.preventDefault();
     console.log('{submitHandler}fired' + event);
     const ingredients =
-      '?i=' + this.state.ingredients.join(',').replace(' ', '_');
+      '?i=' +
+      this.props.ingredients.selectedIngredients.join(',').replace(' ', '_');
     const alcohol = this.state.alcohol ? '?a=Alcoholic' : '?a=Non_Alcoholic';
     this.props.history.push({
       pathname:
@@ -100,24 +95,10 @@ export class UnconnectedIngredientSearch extends Component {
         });
     }
 
-    let ingredientInput = (
-      <Input
-        id="ingredient input"
-        label="Name an ingredient"
-        placeholder="enter an ingredient"
-      ></Input>
-    );
+    let inputPlaceholder = 'enter an ingredient';
 
     if (this.state.newIngredientError === true) {
-      ingredientInput = (
-        <Input
-          id="ingredient input"
-          onChange={this.inputChangeHandler}
-          error
-          label="Name an ingredient"
-          placeholder="we dont have that one!"
-        ></Input>
-      );
+      inputPlaceholder = 'we dont have that one!';
     }
 
     return (
@@ -125,13 +106,22 @@ export class UnconnectedIngredientSearch extends Component {
         <form className={classes.IngredientSearch}>
           <div className={classes.AddIngredients}>
             <div>
-              {ingredientInput}
-              <Button
-                className={classes.SmallButton}
-                click={this.enterNewIngredientHandler}
+              <Input
+                data-test="ingredients-input"
+                id="ingredient-input"
+                onChange={this.inputChangeHandler}
+                value={this.state.ingredientInput}
+                error={this.state.newIngredientError}
+                label="Name an ingredient"
+                placeholder={inputPlaceholder}
+              ></Input>
+              <button
+                data-test="ingredients-submit"
+                className={classes.Button}
+                onClick={this.enterNewIngredientHandler}
               >
                 add
-              </Button>
+              </button>
             </div>
             <div className={classes.Dropdown}>
               <label className={classes.Title}>Select an ingredient</label>
@@ -197,5 +187,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   getIngredientOptions,
-  addSelectedIngrdient,
+  addSelectedIngredient,
 })(UnconnectedIngredientSearch);

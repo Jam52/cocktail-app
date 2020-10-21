@@ -20,7 +20,7 @@ export const getIngredientOptions = () => {
   };
 };
 
-export const addSelectedIngrdient = (newIngredient) => {
+export const addSelectedIngredient = (newIngredient) => {
   return function (dispatch) {
     dispatch({
       type: actionTypes.SET_SELECTED_INGREDIENTS,
