@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
 import axios from '../../../axiosCocktail';
 import classes from './IngredientSearch.module.scss';
 import Ingredients from '../../../components/Ingredients/Ingredients';
@@ -37,10 +36,7 @@ export class UnconnectedIngredientSearch extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.ingredients.selectedIngredients !==
-      this.props.ingredients.selectedIngredients
-    ) {
+    if (prevProps.ingredients !== this.props.ingredients) {
       this.updateDrinks();
     }
   }
@@ -50,20 +46,45 @@ export class UnconnectedIngredientSearch extends Component {
       this.setState({ drinks: [] });
     } else {
       this.setState({ loading: true });
-      const drinks = await this.fetchIngredientData();
-      this.setState({ drinks: await drinks });
+      const drinks = this.duplicateEntriesOnly(
+        await this.fetchIngredientData(),
+        await this.fetchAlcoholData(),
+      );
+      this.setState({ drinks: await drinks, loading: false });
     }
   };
 
   fetchIngredientData = async () => {
-    const ingredientFetch = await axios.get(
+    const ingredientData = await axios.get(
       `/v2/${
         process.env.REACT_APP_COCKTAIL_KEY
       }/filter.php?i=${this.props.ingredients.selectedIngredients
         .join(',')
         .replace(' ', '_')}`,
     );
-    return await ingredientFetch.data.drinks;
+    return await ingredientData.data.drinks;
+  };
+
+  fetchAlcoholData = async () => {
+    const alcoholic = this.props.ingredients.alcoholicDrinksOnly
+      ? 'Alcoholic'
+      : 'Non_Alcoholic';
+    const alcoholData = await axios.get(
+      `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php?a=${alcoholic}`,
+    );
+    return await alcoholData.data.drinks;
+  };
+
+  duplicateEntriesOnly = (ingredientData, alcoholData) => {
+    const data = [...ingredientData, ...alcoholData];
+
+    return data
+      .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
+      .filter((drink, index) => {
+        if (data[index + 1] !== undefined) {
+          return drink.strDrink === data[index + 1].strDrink;
+        }
+      });
   };
 
   addIngredientOnChange = (event) => {
@@ -191,6 +212,7 @@ export class UnconnectedIngredientSearch extends Component {
         <DrinkCardList
           loading={this.state.loading}
           drinks={this.state.drinks}
+          selectedIngredients={this.props.ingredients.selectedIngredients}
         />
         <div className={classes.Buffer}></div>
       </Aux>

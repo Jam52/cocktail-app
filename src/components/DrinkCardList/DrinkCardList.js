@@ -12,6 +12,7 @@ class DrinkCardList extends Component {
     );
     if (this.props.loading === true) {
       drinkCards = <Spinner />;
+    } else {
       if (this.props.drinks.length > 0) {
         drinkCards = this.props.drinks.map((drink) => {
           return (
@@ -23,7 +24,7 @@ class DrinkCardList extends Component {
             />
           );
         });
-      } else {
+      } else if (this.props.selectedIngredients.length > 0) {
         drinkCards = (
           <p className={classes.Error}>Sorry, I Can't Find Anything!</p>
         );
@@ -44,19 +45,4 @@ class DrinkCardList extends Component {
   }
 }
 
-function duplicateEntriesOnly(dataArrayOne, dataArrayTwo) {
-  const data = [...dataArrayOne, ...dataArrayTwo];
-  if (dataArrayOne.length < 1 || dataArrayTwo.length < 1) {
-    return data;
-  }
-  return data
-    .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
-    .filter((drink, index) => {
-      if (data[index + 1] !== undefined) {
-        return drink.strDrink === data[index + 1].strDrink;
-      }
-    });
-}
-
-export { duplicateEntriesOnly };
 export default DrinkCardList;
