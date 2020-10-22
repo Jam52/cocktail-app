@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import axios from '../../../axiosCocktail';
 import classes from './IngredientSearch.module.scss';
 import Ingredients from '../../../components/Ingredients/Ingredients';
 import Aux from '../../../hoc/Auxillary/Auxillary';
@@ -21,6 +22,8 @@ export class UnconnectedIngredientSearch extends Component {
       alcohol: true,
       newIngredientError: false,
       ingredientInput: '',
+      drinks: [],
+      loading: false,
     };
   }
 
@@ -28,7 +31,40 @@ export class UnconnectedIngredientSearch extends Component {
     if (this.props.ingredients.ingredientOptions.length === 0) {
       this.props.getIngredientOptions();
     }
+    if (this.props.ingredients.selectedIngredients.length > 0) {
+      this.updateDrinks();
+    }
   }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.ingredients.selectedIngredients !==
+      this.props.ingredients.selectedIngredients
+    ) {
+      this.updateDrinks();
+    }
+  }
+
+  updateDrinks = async () => {
+    if (this.props.ingredients.selectedIngredients.length === 0) {
+      this.setState({ drinks: [] });
+    } else {
+      this.setState({ loading: true });
+      const drinks = await this.fetchIngredientData();
+      this.setState({ drinks: await drinks });
+    }
+  };
+
+  fetchIngredientData = async () => {
+    const ingredientFetch = await axios.get(
+      `/v2/${
+        process.env.REACT_APP_COCKTAIL_KEY
+      }/filter.php?i=${this.props.ingredients.selectedIngredients
+        .join(',')
+        .replace(' ', '_')}`,
+    );
+    return await ingredientFetch.data.drinks;
+  };
 
   addIngredientOnChange = (event) => {
     event.preventDefault();
@@ -152,9 +188,9 @@ export class UnconnectedIngredientSearch extends Component {
         </form>
         <Divider className={classes.Divider} />
 
-        <Route
-          path={this.props.match.path + '/drinkcardlist/:search'}
-          component={DrinkCardList}
+        <DrinkCardList
+          loading={this.state.loading}
+          drinks={this.state.drinks}
         />
         <div className={classes.Buffer}></div>
       </Aux>

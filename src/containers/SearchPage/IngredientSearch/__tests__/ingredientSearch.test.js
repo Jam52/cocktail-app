@@ -6,6 +6,7 @@ import React from 'react';
 import { storeFactory } from '../../../../testUtils/testUtils';
 import { findByAttr } from '../../../../testUtils/testUtils';
 import { actionTypes } from '../../../../store/actions/index';
+import moxios from 'moxios';
 
 let store;
 
@@ -20,64 +21,72 @@ const setup = (initialState = {}) => {
 };
 
 describe('Ingredient Search', () => {
-  describe('state has no selectedIngredients', () => {
+  describe('state has no selectedIngredients, or ingredientOptions', () => {
     const state = {
       ingredients: {
-        ingredientOptions: ['vodka', 'whiskey'],
+        ingredientOptions: [],
         selectedIngredients: [],
+        alcoholicDrinksOnly: true,
       },
     };
 
-    test('has access to ingredientOptions', () => {
+    test('access to ingredientOptions state', () => {
       const wrapper = setup(state);
       expect(wrapper.instance().props.ingredients.ingredientOptions).toEqual(
         state.ingredients.ingredientOptions,
       );
     });
 
-    test('has access to selectedIngredients', () => {
+    test('access to selectedIngredients state', () => {
       const wrapper = setup(state);
       expect(wrapper.instance().props.ingredients.selectedIngredients).toEqual(
         state.ingredients.selectedIngredients,
       );
     });
 
-    test('calls getIngredientOptions on mount', () => {
+    test('if getIngredientOptions is called on mount', () => {
       const getIngredientOptionsMock = jest.fn();
       const wrapper = shallow(
         <UnconnectedIngredientSearch
           getIngredientOptions={getIngredientOptionsMock}
           match={{ path: '' }}
-          ingredients={{ ingredientOptions: [] }}
+          ingredients={{ ...state.ingredients }}
         />,
       );
       const mockCalls = getIngredientOptionsMock.mock.calls.length;
       expect(mockCalls).toBe(1);
     });
-    test('adds new selected ingredient to state when dropdown option is selected', () => {
+
+    test('selecting alcohol check changes state', () => {
       const wrapper = setup(state);
-      const dropdown = findByAttr(wrapper, 'dropdown-ingredients');
-      const expectedResults = ['Vodka'];
-      dropdown.simulate('change', {
-        preventDefault: () => {},
-        target: { value: 'Vodka' },
-      });
-
-      expect(store.getState().ingredients.selectedIngredients).toEqual(
-        expectedResults,
-      );
+      findByAttr(wrapper, 'toggle-alcohol').simulate('click');
+      expect(store.getState().ingredients.alcoholicDrinksOnly).toBeFalsy();
     });
-    describe('entering new ingredient into input', () => {
-      let wrapper;
-      beforeEach(() => {
-        wrapper = setup(state);
-        store.dispatch({
-          type: actionTypes.SET_INGREDIENT_OPTIONS,
-          payload: ['Vodka'],
+
+    describe('state has ingredientOptions but no selectedIngredients', () => {
+      const state = {
+        ingredients: {
+          ingredientOptions: ['Whiskey', 'Vodka'],
+          selectedIngredients: [],
+          alcoholicDrinksOnly: true,
+        },
+      };
+      test('that new selected ingredient is added to state when dropdown option is selected', () => {
+        const wrapper = setup(state);
+        const dropdown = findByAttr(wrapper, 'dropdown-ingredients');
+        const expectedResults = ['Vodka'];
+        dropdown.simulate('change', {
+          preventDefault: () => {},
+          target: { value: 'Vodka' },
         });
+
+        expect(store.getState().ingredients.selectedIngredients).toEqual(
+          expectedResults,
+        );
       });
 
-      test('shows error if ingredient not in available ingredientOptions', () => {
+      test('if input shows error if ingredient is not in available ingredientOptions', () => {
+        const wrapper = setup(state);
         const button = findByAttr(wrapper, 'ingredients-submit');
         const input = findByAttr(wrapper, 'ingredients-input').at(0);
         input.simulate('change', { target: { value: 'Vodky' } });
@@ -87,7 +96,8 @@ describe('Ingredient Search', () => {
         ).toEqual('we dont have that one!');
       });
 
-      test('adds ingredient to state if correct', () => {
+      test('if ingedient is added to selectedIngredient state if in ingredientOptions', () => {
+        const wrapper = setup(state);
         const button = findByAttr(wrapper, 'ingredients-submit');
         const input = findByAttr(wrapper, 'ingredients-input').at(0);
         input.simulate('change', { target: { value: 'Vodka' } });
@@ -96,20 +106,45 @@ describe('Ingredient Search', () => {
           'Vodka',
         ]);
       });
-    });
-  });
 
-  describe('alcohol state', () => {
-    test('selecting alcohol check changes state', () => {
-      const state = {
-        ingredients: {
-          ingredientOptions: [],
-          alcoholicDrinksOnly: true,
-        },
-      };
-      const wrapper = setup(state);
-      findByAttr(wrapper, 'toggle-alcohol').simulate('click');
-      expect(store.getState().ingredients.alcoholicDrinksOnly).toBeFalsy();
+      describe('mocking axios call', () => {
+        const expectedResponse = {
+          drinks: [
+            {
+              strDrink: "'57 Chevy with a White License Plate",
+              strDrinkThumb:
+                'https://www.thecocktaildb.com/images/media/drink/qyyvtu1468878544.jpg',
+              idDrink: '14029',
+            },
+          ],
+        };
+        beforeEach(() => {
+          moxios.install();
+          moxios.stubRequest(
+            `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php?i=Vodka`,
+            {
+              status: 200,
+              response: expectedResponse,
+            },
+          );
+        });
+        afterEach(() => {
+          moxios.uninstall();
+        });
+        test('fetched data is added to state when adding ingredients to selectedIngredients', () => {
+          const wrapper = setup(state);
+          store.dispatch({
+            type: actionTypes.SET_SELECTED_INGREDIENTS,
+            payload: 'Vodka',
+          });
+
+          moxios.wait(() => {
+            wrapper.update();
+            expect(wrapper.state().drinks).toEqual(expectedResponse.drinks);
+            done();
+          });
+        });
+      });
     });
   });
 });
