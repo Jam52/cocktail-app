@@ -5,8 +5,9 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import { storeFactory } from '../../../../testUtils/testUtils';
 import { findByAttr } from '../../../../testUtils/testUtils';
-import { actionTypes } from '../../../../store/actions/index';
+import { addSelectedIngredient } from '../../../../store/actions/index';
 import moxios from 'moxios';
+import axios from '../../../../axiosCocktail'
 
 let store;
 
@@ -106,45 +107,7 @@ describe('Ingredient Search', () => {
           'Vodka',
         ]);
       });
-
-      describe('mocking axios call', () => {
-        const expectedResponse = {
-          drinks: [
-            {
-              strDrink: "'57 Chevy with a White License Plate",
-              strDrinkThumb:
-                'https://www.thecocktaildb.com/images/media/drink/qyyvtu1468878544.jpg',
-              idDrink: '14029',
-            },
-          ],
-        };
-        beforeEach(() => {
-          moxios.install();
-          moxios.stubRequest(
-            `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php?i=Vodka`,
-            {
-              status: 200,
-              response: expectedResponse,
-            },
-          );
-        });
-        afterEach(() => {
-          moxios.uninstall();
-        });
-        test('fetched data is added to state when adding ingredients to selectedIngredients', () => {
-          const wrapper = setup(state);
-          store.dispatch({
-            type: actionTypes.SET_SELECTED_INGREDIENTS,
-            payload: 'Vodka',
-          });
-
-          moxios.wait(() => {
-            wrapper.update();
-            expect(wrapper.state().drinks).toEqual(expectedResponse.drinks);
-            done();
-          });
-        });
-      });
-    });
+    })
   });
 });
+

@@ -5,10 +5,11 @@ import { duplicateEntriesOnly } from '../DrinkCardList';
 import DrinkCardList from '../DrinkCardList';
 import { findByAttr } from '../../../testUtils/testUtils';
 
-let store;
-
-const setup = () => {
-  const wrapper = shallow(<DrinkCardList />);
+const initialProps = {
+  drinks: []
+}
+const setup = (props = initialProps) => {
+  const wrapper = shallow(<DrinkCardList {...props}/>);
   return wrapper;
 };
 

@@ -17,7 +17,7 @@ class SearchPage extends Component {
             <NavLink
               className={classes.Link}
               activeClassName={classes.active}
-              to={this.props.match.url + '/drink'}
+              to={'/search/drink'}
             >
               Drink Name
             </NavLink>
@@ -25,8 +25,8 @@ class SearchPage extends Component {
               className={classes.Link}
               activeClassName={classes.active}
               to={
-                this.props.match.url +
-                '/ingredient/drinkcardlist/ingredientSearch'
+                
+                '/search/ingredient/drinkcardlist/ingredientSearch'
               }
             >
               Ingredients

@@ -6,29 +6,33 @@ import Aux from '../../hoc/Auxillary/Auxillary';
 import Spinner from '../Spinner/Spinner';
 
 class DrinkCardList extends Component {
+
   render() {
     let drinkCards = (
-      <p className={classes.Error}>Please enter some ingredients</p>
+      <p className={classes.Error}>{this.props.message}</p>
     );
     if (this.props.loading === true) {
       drinkCards = <Spinner />;
     } else {
-      if (this.props.drinks.length > 0) {
-        drinkCards = this.props.drinks.map((drink) => {
-          return (
-            <DrinkCard
-              src={drink.strDrinkThumb}
-              id={drink.idDrink}
-              key={drink.idDrink}
-              title={drink.strDrink}
-            />
+      if(this.props.drinks !== undefined) {
+        if (this.props.drinks.length > 0) {
+          drinkCards = this.props.drinks.map((drink) => {
+            return (
+              <DrinkCard
+                src={drink.strDrinkThumb}
+                id={drink.idDrink}
+                key={drink.idDrink}
+                title={drink.strDrink}
+              />
+            );
+          });
+        } else if (this.props.noDrinksFound) {
+          drinkCards = (
+            <p className={classes.Error}>Sorry, I Can't Find Anything!</p>
           );
-        });
-      } else if (this.props.selectedIngredients.length > 0) {
-        drinkCards = (
-          <p className={classes.Error}>Sorry, I Can't Find Anything!</p>
-        );
+        }
       }
+      
     }
 
     return (

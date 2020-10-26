@@ -1,26 +1,45 @@
-@import "../../../App.module.scss";
+@import '../../../App.module.scss';
 
 .DrinkSearch {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 
-    Button {
-        margin-top: 1em;
-    }
+  Button {
+    margin-top: 1em;
+  }
 }
 
 @media (min-width: 500px) {
-    .DrinkSearch {
-        flex-direction: row;
-        justify-content: flex-start;
+  .DrinkSearch {
+    flex-direction: row;
+    justify-content: flex-start;
 
-        Button {
-            margin-top: 0;
-            margin-left: 1em;
-            width: 20rem;
-        }
+    Button {
+      margin-top: 0;
+      margin-left: 1em;
+      width: 20rem;
     }
+  }
+}
+
+.Button {
+  margin: 0;
+  margin-left: 1rem;
+  padding: 0.6em;
+  background-color: #000;
+  color: #fff;
+  font-family: $font-title;
+  font-size: 1rem;
+  border: 2px solid #fff;
+  height: 3rem;
+  width: 100%;
+
+  &:hover {
+    background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
+    outline: 1px solid #fff;
+    outline-offset: 3px;
+  }
 }

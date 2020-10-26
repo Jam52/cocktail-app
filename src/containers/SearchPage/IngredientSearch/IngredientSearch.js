@@ -23,6 +23,7 @@ export class UnconnectedIngredientSearch extends Component {
       ingredientInput: '',
       drinks: [],
       loading: false,
+      noDrinksFound: false
     };
   }
 
@@ -31,26 +32,33 @@ export class UnconnectedIngredientSearch extends Component {
       this.props.getIngredientOptions();
     }
     if (this.props.ingredients.selectedIngredients.length > 0) {
-      this.updateDrinks();
+      this.updateDrinksInState();
     }
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.ingredients !== this.props.ingredients) {
-      this.updateDrinks();
+      this.updateDrinksInState();
     }
   }
 
-  updateDrinks = async () => {
+  updateDrinksInState = async () => {
+    console.log("TESTING")
     if (this.props.ingredients.selectedIngredients.length === 0) {
       this.setState({ drinks: [] });
     } else {
-      this.setState({ loading: true });
-      const drinks = this.duplicateEntriesOnly(
+      this.setState({ loading: true, noDrinksFound: false });
+      const drinkData = this.duplicateEntriesOnly(
         await this.fetchIngredientData(),
         await this.fetchAlcoholData(),
       );
-      this.setState({ drinks: await drinks, loading: false });
+      const drinkList = drinkData.filter(item => typeof item !== 'string');
+      if (drinkList.length > 0) {
+        this.setState({ drinks: drinkList, loading: false });
+      } else {
+        this.setState({drinks: [], loading: false, noDrinksFound: true})
+      }
+  
     }
   };
 
@@ -212,7 +220,8 @@ export class UnconnectedIngredientSearch extends Component {
         <DrinkCardList
           loading={this.state.loading}
           drinks={this.state.drinks}
-          selectedIngredients={this.props.ingredients.selectedIngredients}
+          message="Please add some ingredients"
+          noDrinksFound={this.state.noDrinksFound}
         />
         <div className={classes.Buffer}></div>
       </Aux>

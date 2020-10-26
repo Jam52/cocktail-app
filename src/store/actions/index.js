@@ -1,5 +1,4 @@
 import axios from '../../axiosCocktail';
-import ingredient from '../../components/Ingredients/Ingredient/Ingredient';
 
 export const actionTypes = {
   SET_INGREDIENT_OPTIONS: 'SET_INGREDIENT_OPTIONS',

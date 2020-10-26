@@ -9,7 +9,6 @@ const Ingredients = (props) => {
 
   const removeIngredient = (evt) => {
     evt.preventDefault();
-    console.log('CLICKED');
     props.removeSelectedIngredient(evt.target.value);
   };
 
