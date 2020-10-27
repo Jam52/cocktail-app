@@ -1,41 +1,46 @@
-@import "../../App.module.scss";
-
-.RandomPage {
-    width: 80vw;
-    margin: auto;
-}
+@import '../../App.module.scss';
 
 .ButtonContainer {
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 2rem 0;
 }
 
 .Button {
-    margin: 0.5rem 0;
+  margin: auto;
+  padding: 0.6em 2em;
+  background-color: #000;
+  color: #fff;
+  font-family: $font-title;
+  font-size: 1rem;
+  text-align: center;
+  border: 2px solid #fff;
+  width: 6rem;
+  cursor: pointer;
+
+  &:hover {
+    background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
+    outline: 1px solid #fff;
+    outline-offset: 3px;
+  }
+
+  &:active {
+    transform: translateY(4px);
+    filter: brightness(1.1);
+  }
 }
 
 .Title {
-    margin: 0;
-    font-family: $font-title;
-    color: #fff;
-    padding: 1rem 0;
-    font-size: 1rem;
+  margin: 0;
+  font-family: $font-title;
+  color: #fff;
+  padding: 1rem 0;
+  font-size: 1rem;
 }
 
 @media (min-width: 500px) {
-    .RandomPage {
-        padding-top: 9rem;
-        width: 80vw;
-    }
-
-    .Title {
-        font-size: 2rem;
-        text-align: center;
-    }
-
-    .ButtonContainer {
-        flex-direction: row;
-        justify-content: space-around;
-    }
+  .Title {
+    font-size: 2rem;
+    text-align: center;
+  }
 }

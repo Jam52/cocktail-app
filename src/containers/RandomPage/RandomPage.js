@@ -1,103 +1,58 @@
 import React, { Component } from 'react';
-import Button from '../../components/Button/Button';
-import { Route } from 'react-router-dom';
-import Aux from '../../hoc/Auxillary/Auxillary';
-import DrinkCardList from '../../components/DrinkCardList/DrinkCardList';
 import classes from './RandomPage.module.scss';
 import Divider from '../../components/Divider/Divider';
+import Button from '../../components/Button/Button'
+import DrinkCardList from '../../components/DrinkCardList/DrinkCardList';
+import { connect } from 'react-redux'
+import { addRandomDrinks } from '../../store/actions/index'
 
-class RandomPage extends Component {
+export class UnconnectedRandomPage extends Component {
   state = {
-    count: 1,
-    randomId: '',
+    loading: false,
+    noDrinksFound: false
   };
 
   componentDidMount() {
-    console.log(this.props);
-    if (this.props.history.action === 'POP') {
-      this.props.history.push({
-        pathname: this.props.history.location.pathname + '?s=' + 0,
-      });
+    if(this.props.randomDrinks.drinks.length === 0) {
+      this.setState({loading: true})
+      this.props.addRandomDrinks();
     }
   }
 
-  randomDrinkSelectionHandler = (event) => {
-    event.preventDefault();
-    let newCount = this.state.count;
-    this.setState({ count: (newCount += 1) });
-    this.props.history.push({
-      pathname:
-        this.props.match.url +
-        '/drinkcardlist/' +
-        'randomselection.php/' +
-        '?s=' +
-        this.state.count,
-    });
-  };
+  addMoreHandler () {
+    console.log('clicked')
+    this.props.addRandomDrinks()
+  }
 
-  popularDrinkSelectionHandler = (event) => {
-    event.preventDefault();
-    let newCount = this.state.count;
-    this.setState({ count: (newCount += 1) });
-    this.props.history.push({
-      pathname:
-        this.props.match.url +
-        '/drinkcardlist/' +
-        'popular.php/' +
-        '?s=' +
-        this.state.count,
-    });
-  };
-
-  latestDrinkSelectionHandler = (event) => {
-    event.preventDefault();
-    let newCount = this.state.count;
-    this.setState({ count: (newCount += 1) });
-    this.props.history.push({
-      pathname:
-        this.props.match.url +
-        '/drinkcardlist/' +
-        'latest.php/' +
-        '?s=' +
-        this.state.count,
-    });
-  };
-
+  
   render() {
+    if(this.props.randomDrinks.drinks.length > 0 && this.state.loading === true) {
+      this.setState({loading: false})
+    }
     return (
-      <Aux>
-        <div className={classes.RandomPage}>
-          <h2 className={classes.Title}>How about we have some fun?</h2>
-          <div className={classes.ButtonContainer}>
-            <Button
-              className={classes.Button}
-              click={this.randomDrinkSelectionHandler}
-            >
-              Random Selection
-            </Button>
-            <Button
-              className={classes.Button}
-              click={this.popularDrinkSelectionHandler}
-            >
-              Popular Selection
-            </Button>
-            <Button
-              className={classes.Button}
-              click={this.latestDrinkSelectionHandler}
-            >
-              Latest Selection
-            </Button>
-          </div>
-          <Divider />
 
-          <Route
-            path={this.props.match.url + '/drinkcardlist/:param/:search'}
-            component={DrinkCardList}
-          />
+        <div data-test="component-random-page" className={classes.RandomPage}>
+          <DrinkCardList
+            data-test="drink-card-list"
+            loading={this.state.loading}
+            drinks={this.props.randomDrinks.drinks}
+            message=""
+            noDrinksFound={this.state.noDrinksFound}
+                />
+        
+          <div className={classes.Button} onClick={() => this.addMoreHandler()}>Add More</div>
+         
         </div>
-      </Aux>
+   
     );
   }
 }
 
-export default RandomPage;
+const mapStateToProps = (state) => {
+  const { randomDrinks } = state;
+  return {
+    randomDrinks
+  }
+}
+
+export default connect(mapStateToProps, { addRandomDrinks })(UnconnectedRandomPage);

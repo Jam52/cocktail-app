@@ -5,6 +5,7 @@ export const actionTypes = {
   SET_SELECTED_INGREDIENTS: 'SET_SELECTED_INGREDIENTS',
   REMOVE_SELECTED_INGREDIENTS: 'REMOVE_SELECTED_INGREDIENTS',
   SET_ALCOHOL_FILTER: 'SET_ALCOHOL_FILTER',
+  ADD_RANDOM_DRINKS: 'ADD_RANDOM_DRINKS'
 };
 
 export const getIngredientOptions = () => {
@@ -46,3 +47,15 @@ export const setAlcoholicDrinksOnlyFilter = (alcoholicDrinksOnly) => {
     });
   };
 };
+
+
+export const addRandomDrinks = () => {
+  return function (dispatch) {
+    return axios.get(`v2/${process.env.REACT_APP_COCKTAIL_KEY}/randomselection.php`).then(response => {
+      dispatch({
+        type: actionTypes.ADD_RANDOM_DRINKS,
+        payload: response.data.drinks
+      })
+    })
+  }
+}

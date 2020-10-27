@@ -1,7 +1,7 @@
 import moxios from 'moxios';
 import axios from '../../axiosCocktail';
 import { storeFactory } from '../../testUtils/testUtils';
-import { getIngredientOptions } from '../actions/index';
+import { addRandomDrinks, getIngredientOptions } from '../actions/index';
 
 describe('getIngredientOptions action creator', () => {
   beforeEach(() => {
@@ -11,9 +11,10 @@ describe('getIngredientOptions action creator', () => {
     moxios.uninstall();
   });
 
-  const ingredients = { drinks: [{ strIngredient1: 'Light rum' }] };
+ 
 
   test('adds ingredients to state', () => {
+    const ingredients = { drinks: [{ strIngredient1: 'Light rum' }] };
     const store = storeFactory();
     moxios.wait(() => {
       const request = moxios.requests.mostRecent();
@@ -28,4 +29,21 @@ describe('getIngredientOptions action creator', () => {
       expect(state.ingredients.ingredientOptions).toEqual(['Light rum']);
     });
   });
+
+  test('adds random drinks to state', () => {
+    const drinks = {drinks: [{name: 'a drink', ingredients: 'something'}]}
+    const store = storeFactory();
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 200,
+        response: drinks
+      })
+    })
+
+    return store.dispatch(addRandomDrinks()).then(() => {
+      const state = store.getState();
+      expect(state.randomDrinks.drinks).toEqual([...drinks.drinks])
+    })
+  })
 });
