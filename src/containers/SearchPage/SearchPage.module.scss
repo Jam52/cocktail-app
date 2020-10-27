@@ -1,66 +1,60 @@
-@import "../../App.module.scss";
+@import '../../App.module.scss';
 
 .Search {
-    width: 80vw;
-    margin: auto;
-    padding-top: 1rem;
+  padding-top: 1rem;
 }
 
 .Container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
 
-    div {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-    }
+  div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
 }
 
 .Title {
-    font-family: $font-title;
-    font-size: 1rem;
-    color: #fff;
-    text-align: center;
+  font-family: $font-title;
+  font-size: 1rem;
+  color: #fff;
+  text-align: center;
 }
 
 .Link {
-    margin: 0.5rem 0;
-    padding: 0.6em;
-    background-color: #000;
-    color: #fff;
-    font-family: $font-title;
-    font-size: 1rem;
-    border: 2px solid #fff;
-    text-align: center;
-    text-decoration: none;
+  margin: 0.5rem 0;
+  padding: 0.6em;
+  background-color: #000;
+  color: #fff;
+  font-family: $font-title;
+  font-size: 1rem;
+  border: 2px solid #fff;
+  text-align: center;
+  text-decoration: none;
 
-    &:hover,
-    &.active {
-        background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
-        outline: 1px solid #fff;
-        outline-offset: 3px;
-    }
+  &:hover,
+  &.active {
+    background-image: linear-gradient(to right, #42210b, #b59952, #42210b);
+    outline: 1px solid #fff;
+    outline-offset: 3px;
+  }
 }
 
 @media (min-width: 500px) {
-    .Search {
-        width: 80vw;
-        padding-top: 8rem;
+  .Title {
+    font-size: 2rem;
+  }
+  .Container {
+    div {
+      flex-direction: row;
     }
-    .Title {
-        font-size: 2rem;
-    }
-    .Container {
-        div {
-            flex-direction: row;
-        }
-    }
-    .Link {
-        width: 20vw;
-        margin: 0.5rem 1rem;
-    }
+  }
+  .Link {
+    width: 20vw;
+    margin: 0.5rem 1rem;
+  }
 }

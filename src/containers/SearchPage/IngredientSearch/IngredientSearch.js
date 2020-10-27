@@ -1,145 +1,153 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import Button from '../../../components/Button/Button';
-import classes from './IngredientSearch.module.scss';
 import axios from '../../../axiosCocktail';
+import classes from './IngredientSearch.module.scss';
 import Ingredients from '../../../components/Ingredients/Ingredients';
 import Aux from '../../../hoc/Auxillary/Auxillary';
 import Divider from '../../../components/Divider/Divider';
 import DrinkCardList from '../../../components/DrinkCardList/DrinkCardList';
 import Input from '../../../components/Input/Input';
 import { checkEnteredIngredient } from './checkEnteredIngredient';
+import {
+  getIngredientOptions,
+  addSelectedIngredient,
+  setAlcoholicDrinksOnlyFilter,
+} from '../../../store/actions/index';
+import { connect } from 'react-redux';
 
-class ingredientSearch extends Component {
+export class UnconnectedIngredientSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      glassTypes: null,
-      categories: null,
-      ingredientOptions: null,
-      ingredients: [],
       alcohol: true,
-      chosenGlassType: 'Any',
-      chosenCategory: 'Any',
       newIngredientError: false,
+      ingredientInput: '',
+      drinks: [],
+      loading: false,
+      noDrinksFound: false
     };
   }
 
   componentDidMount() {
-    if (this.props.history.action === 'POP') {
-      this.props.history.push({
-        pathname:
-          this.props.history.location.pathname +
-          this.props.history.location.search,
-      });
+    if (this.props.ingredients.ingredientOptions.length === 0) {
+      this.props.getIngredientOptions();
     }
-
-    if (this.state.ingredientOptions === null) {
-      axios.get('/v1/1/list.php?i=list').then((response) => {
-        this.setState({
-          ingredientOptions: [
-            ...response.data.drinks
-              .sort((a, b) => (a.strIngredient1 > b.strIngredient1 ? 1 : -1))
-              .map((ingredient) => {
-                return ingredient.strIngredient1;
-              }),
-          ],
-        });
-      });
+    if (this.props.ingredients.selectedIngredients.length > 0) {
+      this.updateDrinksInState();
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.ingredients !== this.props.ingredients) {
+      this.updateDrinksInState();
+    }
+  }
+
+  updateDrinksInState = async () => {
+    console.log("TESTING")
+    if (this.props.ingredients.selectedIngredients.length === 0) {
+      this.setState({ drinks: [] });
+    } else {
+      this.setState({ loading: true, noDrinksFound: false });
+      const drinkData = this.duplicateEntriesOnly(
+        await this.fetchIngredientData(),
+        await this.fetchAlcoholData(),
+      );
+      const drinkList = drinkData.filter(item => typeof item !== 'string');
+      if (drinkList.length > 0) {
+        this.setState({ drinks: drinkList, loading: false });
+      } else {
+        this.setState({drinks: [], loading: false, noDrinksFound: true})
+      }
+  
+    }
+  };
+
+  fetchIngredientData = async () => {
+    const ingredientData = await axios.get(
+      `/v2/${
+        process.env.REACT_APP_COCKTAIL_KEY
+      }/filter.php?i=${this.props.ingredients.selectedIngredients
+        .join(',')
+        .replace(' ', '_')}`,
+    );
+    return await ingredientData.data.drinks;
+  };
+
+  fetchAlcoholData = async () => {
+    const alcoholic = this.props.ingredients.alcoholicDrinksOnly
+      ? 'Alcoholic'
+      : 'Non_Alcoholic';
+    const alcoholData = await axios.get(
+      `/v2/${process.env.REACT_APP_COCKTAIL_KEY}/filter.php?a=${alcoholic}`,
+    );
+    return await alcoholData.data.drinks;
+  };
+
+  duplicateEntriesOnly = (ingredientData, alcoholData) => {
+    const data = [...ingredientData, ...alcoholData];
+
+    return data
+      .sort((a, b) => (a.strDrink > b.strDrink ? 1 : -1))
+      .filter((drink, index) => {
+        if (data[index + 1] !== undefined) {
+          return drink.strDrink === data[index + 1].strDrink;
+        }
+      });
+  };
+
   addIngredientOnChange = (event) => {
     event.preventDefault();
-    console.log('[addIngredient]clicked');
     const newIngredient = event.target.value;
-    let newIngredients = [newIngredient, ...this.state.ingredients];
-    this.setState({ ingredients: newIngredients });
-    event.target.previousSibling.lastChild.value = '';
+    this.props.addSelectedIngredient(newIngredient);
   };
 
   enterNewIngredientHandler = (event) => {
     event.preventDefault();
-    console.log('[enterNewIngredientHandler]clicked');
-    const newIngredient = checkEnteredIngredient(
-      event.target.previousSibling.lastChild.value,
-      this.state.ingredientOptions,
+    const checkedIngredient = checkEnteredIngredient(
+      this.state.ingredientInput,
+      this.props.ingredients.ingredientOptions,
     );
-
-    if (newIngredient) {
-      let newIngredients = [newIngredient, ...this.state.ingredients];
-      this.setState({ ingredients: newIngredients });
-      event.target.previousSibling.lastChild.value = '';
-      this.setState({ newIngredientError: false });
+    if (checkedIngredient) {
+      this.props.addSelectedIngredient(checkedIngredient);
+      this.setState({ ingredientInput: '' });
     } else {
-      event.target.previousSibling.lastChild.value = '';
       this.setState({ newIngredientError: true });
+      this.setState({ ingredientInput: '' });
     }
   };
 
   inputChangeHandler = (event) => {
+    this.setState({ ingredientInput: event.target.value });
     if (event.target.value.length > 0) {
       this.setState({ newIngredientError: false });
     }
   };
 
-  removeIngredient = (event) => {
-    event.preventDefault();
-    console.log('[removeIngredient]clicked');
-    console.log(event.target);
-    let ingredientRemoved = this.state.ingredients.filter((ing) => {
-      return ing !== event.target.value;
-    });
-    this.setState({ ingredients: ingredientRemoved });
-  };
-
   toggleAlcohol = () => {
-    this.setState({ alcohol: !this.state.alcohol });
-  };
-
-  submitSearchHandler = (event) => {
-    event.preventDefault();
-    console.log('{submitHandler}fired' + event);
-    const ingredients =
-      '?i=' + this.state.ingredients.join(',').replace(' ', '_');
-    const alcohol = this.state.alcohol ? '?a=Alcoholic' : '?a=Non_Alcoholic';
-    this.props.history.push({
-      pathname:
-        this.props.match.url +
-        '/drinkcardlist/' +
-        'filter.php/' +
-        ingredients +
-        '/' +
-        alcohol,
-    });
+    this.props.setAlcoholicDrinksOnlyFilter(
+      !this.props.ingredients.alcoholicDrinksOnly,
+    );
   };
 
   render() {
     let ingredientOptions = <option>Unknown</option>;
-    if (this.state.ingredientOptions !== null) {
-      ingredientOptions = this.state.ingredientOptions.map((ingredient) => {
-        return <option key={ingredient}>{ingredient}</option>;
-      });
+
+    if (this.props.ingredients.ingredientOptions.length > 0) {
+      ingredientOptions = this.props.ingredients.ingredientOptions
+        .sort()
+        .map((ingredient) => {
+          return (
+            <option value={ingredient} key={ingredient}>
+              {ingredient}
+            </option>
+          );
+        });
     }
 
-    let ingredientInput = (
-      <Input
-        id="ingredient input"
-        label="Name an ingredient"
-        placeholder="enter an ingredient"
-      ></Input>
-    );
+    let inputPlaceholder = 'enter an ingredient';
 
     if (this.state.newIngredientError === true) {
-      ingredientInput = (
-        <Input
-          id="ingredient input"
-          onChange={this.inputChangeHandler}
-          error
-          label="Name an ingredient"
-          placeholder="we dont have that one!"
-        ></Input>
-      );
+      inputPlaceholder = 'we dont have that one!';
     }
 
     return (
@@ -147,30 +155,43 @@ class ingredientSearch extends Component {
         <form className={classes.IngredientSearch}>
           <div className={classes.AddIngredients}>
             <div>
-              {ingredientInput}
-              <Button
-                className={classes.SmallButton}
-                click={this.enterNewIngredientHandler}
+              <Input
+                data-test="ingredients-input"
+                id="ingredient-input"
+                onChange={this.inputChangeHandler}
+                value={this.state.ingredientInput}
+                error={this.state.newIngredientError}
+                label="Name an ingredient"
+                placeholder={inputPlaceholder}
+              ></Input>
+              <button
+                data-test="ingredients-submit"
+                className={classes.Button}
+                onClick={this.enterNewIngredientHandler}
               >
                 add
-              </Button>
+              </button>
             </div>
             <div className={classes.Dropdown}>
               <label className={classes.Title}>Select an ingredient</label>
-              <select onChange={this.addIngredientOnChange}>
+              <select
+                data-test="dropdown-ingredients"
+                onChange={this.addIngredientOnChange}
+              >
                 {ingredientOptions}
               </select>
             </div>
 
-            <Ingredients
-              removeIngredient={this.removeIngredient}
-              ingredients={this.state.ingredients}
-            />
+            <Ingredients />
           </div>
 
           <div className={classes.Alcohol}>
             <h2 className={classes.Title}>Alcohol?</h2>
-            <div className={classes.CheckBox} onClick={this.toggleAlcohol}>
+            <div
+              className={classes.CheckBox}
+              onClick={this.toggleAlcohol}
+              data-test="toggle-alcohol"
+            >
               <div>
                 <label for="yes">Yes Please!</label>
                 <input
@@ -178,7 +199,7 @@ class ingredientSearch extends Component {
                   name="alcohol"
                   id="yes"
                   value="yes"
-                  checked={this.state.alcohol === true}
+                  checked={this.props.ingredients.alcoholicDrinksOnly === true}
                 />
               </div>
               <div>
@@ -188,21 +209,19 @@ class ingredientSearch extends Component {
                   name="alcohol"
                   id="no"
                   value="no"
-                  checked={this.state.alcohol === false}
+                  checked={this.props.ingredients.alcoholicDrinksOnly === false}
                 />
               </div>
             </div>
           </div>
-
-          <Button className={classes.Submit} click={this.submitSearchHandler}>
-            what ya got?
-          </Button>
         </form>
         <Divider className={classes.Divider} />
 
-        <Route
-          path={this.props.match.path + '/drinkcardlist/:param/:search'}
-          component={DrinkCardList}
+        <DrinkCardList
+          loading={this.state.loading}
+          drinks={this.state.drinks}
+          message="Please add some ingredients"
+          noDrinksFound={this.state.noDrinksFound}
         />
         <div className={classes.Buffer}></div>
       </Aux>
@@ -210,4 +229,15 @@ class ingredientSearch extends Component {
   }
 }
 
-export default ingredientSearch;
+const mapStateToProps = (state) => {
+  const { ingredients } = state;
+  return {
+    ingredients,
+  };
+};
+
+export default connect(mapStateToProps, {
+  getIngredientOptions,
+  addSelectedIngredient,
+  setAlcoholicDrinksOnlyFilter,
+})(UnconnectedIngredientSearch);
