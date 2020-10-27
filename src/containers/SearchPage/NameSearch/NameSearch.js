@@ -15,6 +15,7 @@ class nameSearch extends Component {
   drinkNameInput: ''
  }
 
+
   onSubmitDrinkNameHandler = async (event) => {
     event.preventDefault();
     this.setState({loading: true});
