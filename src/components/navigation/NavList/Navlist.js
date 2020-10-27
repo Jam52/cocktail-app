@@ -8,6 +8,7 @@ class navList extends Component {
       <nav className={classes.NavList}>
         <NavItem icon="search" />
         <NavItem icon="random" />
+        <NavItem icon="popular" />
         <NavItem icon="about" />
       </nav>
     );
