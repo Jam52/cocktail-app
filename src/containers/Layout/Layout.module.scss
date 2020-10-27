@@ -1,0 +1,12 @@
+.Layout {
+  margin: auto;
+  width: 90vw;
+}
+
+@media (min-width: 700px) {
+  .Layout {
+    padding-top: 8rem;
+    width: 80vw;
+    max-width: 1200px;
+  }
+}
