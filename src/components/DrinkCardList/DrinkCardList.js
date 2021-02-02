@@ -41,7 +41,7 @@ class DrinkCardList extends Component {
     return (
       <Aux>
         <div className={classes.container}>{drinkCards}</div>
-        <Divider />
+        <Divider className={classes.divider} />
       </Aux>
     );
   }
