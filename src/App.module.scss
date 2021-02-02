@@ -8,11 +8,10 @@ $font-title: 'Limelight', cursive;
   background: linear-gradient(to right, #000, #333, #000);
   min-height: 100vh;
   height: 100%;
-  padding-bottom: 2rem;
 }
 
 @media (min-width: 2000px) {
   html {
-    font-size: 30px;
+    font-size: 2rem;
   }
 }
