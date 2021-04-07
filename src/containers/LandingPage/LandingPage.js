@@ -8,9 +8,11 @@ const LandingPage = () => {
       className={classes.Main}
       style={{ backgroundImage: `url(${BackgroundImg})` }}
     >
-      <p className={classes.Title}>
-        “Welcome to Madame Mimi’s cocktail bar, what can I get for you?”
-      </p>
+      <div className={classes.Title}>
+        <h1>
+          “Welcome to Madame Mimi’s cocktail bar, what can I get for you?”
+        </h1>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,15 @@
 @import "../../App.module.scss";
 
 .Title {
-    font-family: $font-title;
-    color: #fff;
-    font-size: 2rem;
     width: 80vw;
+    max-width: 1200px;
     margin: 2rem auto;
+    h1 {
+        font-family: $font-title;
+        color: #fff;
+        font-size: 2rem;
+        
+    }
 }
 
 .Main {
@@ -22,9 +26,13 @@
 @media (min-width: 500px) {
     .Title {
         font-size: 3rem;
-        width: 60vw;
-        margin: 4rem 10vw 0 auto;
+        width: 80vw;
+        max-width: 1200px;
+        margin: auto;
         text-align: right;
+        h1 {
+            font-size: 3rem;
+        }
     }
 
     .Main {
