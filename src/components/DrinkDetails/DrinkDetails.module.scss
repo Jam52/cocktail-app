@@ -3,7 +3,6 @@
 .DrinkDetails {
   padding-top: 1rem;
   padding-bottom: 8rem;
-  width: 80vw;
   margin: auto;
   display: grid;
   grid-template-columns: 1fr;
@@ -68,7 +67,6 @@
 @media (min-width: 500px) {
   .DrinkDetails {
     padding-bottom: 1rem;
-    width: 80vw;
     grid-template-columns: 1fr 0.7fr;
     grid-template-rows: 3rem 0.5fr 1fr;
     grid-template-areas:
